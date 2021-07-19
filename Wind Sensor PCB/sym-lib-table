@@ -7,4 +7,5 @@
   (lib (name Amplifier_Difference)(type Legacy)(uri "C:/Program Files/KiCad/share/kicad/library/Amplifier_Difference.lib")(options "")(descr ""))
   (lib (name Amplifier_Operational)(type Legacy)(uri "C:/Program Files/KiCad/share/kicad/library/Amplifier_Operational.lib")(options "")(descr ""))
   (lib (name Analog_ADC)(type Legacy)(uri "C:/Program Files/KiCad/share/kicad/library/Analog_ADC.lib")(options "")(descr ""))
+  (lib (name SHT30-DIS-B)(type Legacy)(uri "G:/My Drive/KiCAD/kicad_reinnovation/KiCAD PRETTY/SHT30-DIS-B/SHT30-DIS-B.lib")(options "")(descr ""))
 )

@@ -3,7 +3,7 @@ EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 2 6
+Sheet 2 5
 Title ""
 Date ""
 Rev ""
@@ -147,22 +147,6 @@ Wire Wire Line
 	4050 2700 4050 3000
 Connection ~ 4050 3000
 Connection ~ 4050 3800
-$Comp
-L Amplifier_Operational:TSV911xxLx U1
-U 1 1 60FA8130
-P 3600 3800
-AR Path="/60FA8130" Ref="U1"  Part="1" 
-AR Path="/60F87947/60FA8130" Ref="U1"  Part="1" 
-F 0 "U1" H 3944 3846 50  0000 L CNN
-F 1 "TSV911xxLx" H 3700 3650 50  0000 L CNN
-F 2 "REInnovationFootprint:SM_SOT-23-5" H 3500 3600 50  0001 L CNN
-F 3 "www.st.com/resource/en/datasheet/tsv911.pdf" H 3600 4000 50  0001 C CNN
-F 4 "C361052" H 3600 3800 50  0001 C CNN "LCSC"
-F 5 "Y" H 3600 3800 50  0001 C CNN "JLCPCB Add"
-F 6 "0.4576" H 3600 3800 50  0001 C CNN "JLCPCB Cost"
-	1    3600 3800
-	1    0    0    -1  
-$EndComp
 Wire Wire Line
 	3500 4250 3500 4100
 Wire Wire Line
@@ -269,4 +253,20 @@ Wire Wire Line
 	7900 3550 8200 3550
 Wire Wire Line
 	7900 3650 8200 3650
+$Comp
+L Amplifier_Operational:TSV911xxLx U1
+U 1 1 60FA8130
+P 3600 3800
+AR Path="/60FA8130" Ref="U1"  Part="1" 
+AR Path="/60F87947/60FA8130" Ref="U1"  Part="1" 
+F 0 "U1" H 3944 3846 50  0000 L CNN
+F 1 "TSV911xxLx" H 3700 3650 50  0000 L CNN
+F 2 "REInnovationFootprint:SM_SOT-23-5" H 3500 3600 50  0001 L CNN
+F 3 "www.st.com/resource/en/datasheet/tsv911.pdf" H 3600 4000 50  0001 C CNN
+F 4 "C361052" H 3600 3800 50  0001 C CNN "LCSC"
+F 5 "Y" H 3600 3800 50  0001 C CNN "JLCPCB Add"
+F 6 "0.4576" H 3600 3800 50  0001 C CNN "JLCPCB Cost"
+	1    3600 3800
+	1    0    0    -1  
+$EndComp
 $EndSCHEMATC

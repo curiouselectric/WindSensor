@@ -289,26 +289,6 @@ X 2 2 300 0 200 L 60 60 0 1 P I
 ENDDRAW
 ENDDEF
 #
-# matts_components_ZENER
-#
-DEF matts_components_ZENER D 0 40 N N 1 F N
-F0 "D" 0 100 50 H V C CNN
-F1 "matts_components_ZENER" 0 -100 50 H V C CNN
-F2 "" 0 0 50 H V C CNN
-F3 "" 0 0 50 H V C CNN
-$FPLIST
- D?
- SO*
- SM*
-$ENDFPLIST
-DRAW
-P 5 0 1 8 -70 50 -50 30 -50 -30 -30 -50 -30 -50 N
-P 5 0 1 0 -50 0 50 50 50 -50 -50 0 -50 0 F
-X K 1 -200 0 150 R 50 50 1 1 P
-X A 2 200 0 150 L 50 50 1 1 P
-ENDDRAW
-ENDDEF
-#
 # matts_components_ZENERsmall
 #
 DEF matts_components_ZENERsmall D 0 40 N N 1 F N

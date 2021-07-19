@@ -3,7 +3,7 @@ EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 4 6
+Sheet 3 4
 Title ""
 Date ""
 Rev ""
@@ -67,9 +67,9 @@ Wire Wire Line
 	4300 3950 4400 3950
 Wire Wire Line
 	4400 3250 4600 3250
-Text Label 8850 2400 2    50   ~ 0
+Text Label 9350 2400 2    50   ~ 0
 I2C_SDA
-Text Label 8850 2300 2    50   ~ 0
+Text Label 9350 2300 2    50   ~ 0
 I2C_SCL
 Connection ~ 8050 2500
 Wire Wire Line
@@ -129,7 +129,7 @@ P 8200 2750
 AR Path="/60FFEE2F" Ref="R?"  Part="1" 
 AR Path="/60FF06B8/60FFEE2F" Ref="R7"  Part="1" 
 F 0 "R7" V 8200 2650 50  0000 L CNN
-F 1 "4k7" V 8150 2500 50  0000 L CNN
+F 1 "10k" V 8150 2500 50  0000 L CNN
 F 2 "REInnovationFootprint:SM0805" V 8130 2750 50  0001 C CNN
 F 3 "~" H 8200 2750 50  0001 C CNN
 F 4 "Farnell" H 8200 2750 50  0001 C CNN "Supplier 1"
@@ -164,77 +164,77 @@ F 11 "0.0029" H 7250 3500 50  0001 C CNN "JLCPCB Cost"
 	1    7250 3500
 	1    0    0    -1  
 $EndComp
-Text Notes 2600 3800 0    50   ~ 0
+Text Notes 1700 3700 0    50   ~ 0
 SENSOR Board ID\n
 Wire Wire Line
-	3500 4150 3500 4050
-Connection ~ 3500 4150
+	2600 4050 2600 3950
+Connection ~ 2600 4050
 Wire Wire Line
-	3400 4150 3500 4150
-Connection ~ 3500 4250
+	2500 4050 2600 4050
+Connection ~ 2600 4150
 Wire Wire Line
-	3500 4050 3400 4050
+	2600 3950 2500 3950
 Wire Wire Line
-	3500 4250 3500 4150
+	2600 4150 2600 4050
 Wire Wire Line
-	3500 4250 3500 4400
+	2600 4150 2600 4300
 Wire Wire Line
-	3400 4250 3500 4250
+	2500 4150 2600 4150
 $Comp
 L matts_components:ISP_3X2 P?
 U 1 1 60FFEE6D
-P 3000 4200
+P 2100 4100
 AR Path="/60FFEE6D" Ref="P?"  Part="1" 
 AR Path="/60FF06B8/60FFEE6D" Ref="P3"  Part="1" 
-F 0 "P3" H 3000 4550 50  0000 C CNN
-F 1 "ID" H 3000 4466 40  0000 C CNN
-F 2 "REInnovationFootprint:SM_6pad_3W_SOLDER" H 3000 4200 60  0001 C CNN
-F 3 "" H 3000 4200 60  0000 C CNN
-F 4 "Toby Electronics" H 3000 4200 50  0001 C CNN "Supplier 1"
-F 5 "THD-03-R" H 3000 4200 50  0001 C CNN "Supplier 1 Code"
-F 6 "https://www.toby.co.uk/board-to-board-pcb-connectors/254mm-headers/thd-valcon-2.54mm-pitch-dual-row-pin-header/" H 3000 4200 50  0001 C CNN "Supplier 1 Web"
-F 7 "Valcon" H 3000 4200 50  0001 C CNN "Manufacturer"
-F 8 "0.05" H 3000 4200 50  0001 C CNN "Supplier 1 Cost"
-	1    3000 4200
+F 0 "P3" H 2100 4450 50  0000 C CNN
+F 1 "ID" H 2100 4366 40  0000 C CNN
+F 2 "REInnovationFootprint:SM_6pad_3W_SOLDER" H 2100 4100 60  0001 C CNN
+F 3 "" H 2100 4100 60  0000 C CNN
+F 4 "Toby Electronics" H 2100 4100 50  0001 C CNN "Supplier 1"
+F 5 "THD-03-R" H 2100 4100 50  0001 C CNN "Supplier 1 Code"
+F 6 "https://www.toby.co.uk/board-to-board-pcb-connectors/254mm-headers/thd-valcon-2.54mm-pitch-dual-row-pin-header/" H 2100 4100 50  0001 C CNN "Supplier 1 Web"
+F 7 "Valcon" H 2100 4100 50  0001 C CNN "Manufacturer"
+F 8 "0.05" H 2100 4100 50  0001 C CNN "Supplier 1 Cost"
+	1    2100 4100
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	2600 4050 2450 4050
+	1700 3950 1550 3950
 Wire Wire Line
-	2600 4150 2450 4150
+	1700 4050 1550 4050
 Wire Wire Line
-	2600 4250 2450 4250
-Text Label 2450 4250 2    50   ~ 0
+	1700 4150 1550 4150
+Text Label 1550 4150 2    50   ~ 0
 A2
-Text Label 2450 4150 2    50   ~ 0
+Text Label 1550 4050 2    50   ~ 0
 A1
-Text Label 2450 4050 2    50   ~ 0
+Text Label 1550 3950 2    50   ~ 0
 A0
 Wire Wire Line
-	2450 2350 2650 2350
-Text Label 2450 2350 0    50   ~ 0
+	2200 1850 2400 1850
+Text Label 2200 1850 0    50   ~ 0
 D8
 Wire Wire Line
-	2650 3150 2650 2950
+	2400 2650 2400 2450
 $Comp
 L matts_components:SW_PUSH SW?
 U 1 1 60FFEE95
-P 2650 2650
+P 2400 2150
 AR Path="/60FFEE95" Ref="SW?"  Part="1" 
 AR Path="/60FF06B8/60FFEE95" Ref="SW1"  Part="1" 
-F 0 "SW1" V 2604 2767 50  0000 L CNN
-F 1 "SWA" V 2695 2767 50  0000 L CNN
-F 2 "REInnovationFootprint:SMD_SW_6x3_5" H 2650 2650 60  0001 C CNN
-F 3 "" H 2650 2650 60  0000 C CNN
-F 4 "https://uk.farnell.com/alcoswitch-te-connectivity/147873-1/tactile-switch-spst-0-05a-24v/dp/2610942" H 2650 2650 50  0001 C CNN "Supplier 1 Web"
-F 5 "Farnell" H 2650 2650 50  0001 C CNN "Supplier 1"
-F 6 "2610942" H 2650 2650 50  0001 C CNN "Supplier 1 Code"
-F 7 "147873-1" H 2650 2650 50  0001 C CNN "Manufacturer Part"
-F 8 "0.236" H 2650 2650 50  0001 C CNN "Supplier 1 Cost"
-F 9 "C412368" H 2650 2650 50  0001 C CNN "LCSC"
-F 10 "Y" H 2650 2650 50  0001 C CNN "JLCPCB Add"
-F 11 "0.0194" H 2650 2650 50  0001 C CNN "JLCPCB Cost"
-	1    2650 2650
+F 0 "SW1" V 2354 2267 50  0000 L CNN
+F 1 "SWA" V 2445 2267 50  0000 L CNN
+F 2 "REInnovationFootprint:SMD_SW_6x3_5" H 2400 2150 60  0001 C CNN
+F 3 "" H 2400 2150 60  0000 C CNN
+F 4 "https://uk.farnell.com/alcoswitch-te-connectivity/147873-1/tactile-switch-spst-0-05a-24v/dp/2610942" H 2400 2150 50  0001 C CNN "Supplier 1 Web"
+F 5 "Farnell" H 2400 2150 50  0001 C CNN "Supplier 1"
+F 6 "2610942" H 2400 2150 50  0001 C CNN "Supplier 1 Code"
+F 7 "147873-1" H 2400 2150 50  0001 C CNN "Manufacturer Part"
+F 8 "0.236" H 2400 2150 50  0001 C CNN "Supplier 1 Cost"
+F 9 "C412368" H 2400 2150 50  0001 C CNN "LCSC"
+F 10 "Y" H 2400 2150 50  0001 C CNN "JLCPCB Add"
+F 11 "0.0194" H 2400 2150 50  0001 C CNN "JLCPCB Cost"
+	1    2400 2150
 	0    1    1    0   
 $EndComp
 Wire Wire Line
@@ -263,43 +263,43 @@ $EndComp
 $Comp
 L Device:LED D?
 U 1 1 60FFEEC0
-P 1800 3300
+P 1550 2500
 AR Path="/60FFEEC0" Ref="D?"  Part="1" 
 AR Path="/60FF06B8/60FFEEC0" Ref="D2"  Part="1" 
-F 0 "D2" V 1900 3300 50  0000 R CNN
-F 1 "LED0" V 1550 3300 50  0000 R CNN
-F 2 "REInnovationFootprint:SM0805_LED" H 1800 3300 50  0001 C CNN
-F 3 "~" H 1800 3300 50  0001 C CNN
-F 4 "Farnell" H 1800 3300 50  0001 C CNN "Supplier 1"
-F 5 "3015159" H 1800 3300 50  0001 C CNN "Supplier 1 Code"
-F 6 "https://uk.farnell.com/multicomp-pro/mc011368/led-orange-red-150mcd-620nm-0805/dp/3015159" H 1800 3300 50  0001 C CNN "Supplier 1 Web"
-F 7 "MC011368" H 1800 3300 50  0001 C CNN "Manufacturer Part"
-F 8 "0.0834" H 1800 3300 50  0001 C CNN "Supplier 1 Cost"
-F 9 "C2296" H 1800 3300 50  0001 C CNN "LCSC"
-F 10 "Y" H 1800 3300 50  0001 C CNN "JLCPCB Add"
-F 11 "0.0102" H 1800 3300 50  0001 C CNN "JLCPCB Cost"
-	1    1800 3300
+F 0 "D2" V 1650 2500 50  0000 R CNN
+F 1 "LED0" V 1300 2500 50  0000 R CNN
+F 2 "REInnovationFootprint:SM0805_LED" H 1550 2500 50  0001 C CNN
+F 3 "~" H 1550 2500 50  0001 C CNN
+F 4 "Farnell" H 1550 2500 50  0001 C CNN "Supplier 1"
+F 5 "3015159" H 1550 2500 50  0001 C CNN "Supplier 1 Code"
+F 6 "https://uk.farnell.com/multicomp-pro/mc011368/led-orange-red-150mcd-620nm-0805/dp/3015159" H 1550 2500 50  0001 C CNN "Supplier 1 Web"
+F 7 "MC011368" H 1550 2500 50  0001 C CNN "Manufacturer Part"
+F 8 "0.0834" H 1550 2500 50  0001 C CNN "Supplier 1 Cost"
+F 9 "C2296" H 1550 2500 50  0001 C CNN "LCSC"
+F 10 "Y" H 1550 2500 50  0001 C CNN "JLCPCB Add"
+F 11 "0.0102" H 1550 2500 50  0001 C CNN "JLCPCB Cost"
+	1    1550 2500
 	0    -1   -1   0   
 $EndComp
 $Comp
 L Device:R R?
 U 1 1 60FFEECE
-P 1800 2850
+P 1550 2050
 AR Path="/60FFEECE" Ref="R?"  Part="1" 
 AR Path="/60FF06B8/60FFEECE" Ref="R4"  Part="1" 
-F 0 "R4" H 1870 2896 50  0000 L CNN
-F 1 "470" H 1870 2805 50  0000 L CNN
-F 2 "REInnovationFootprint:SM0805" V 1730 2850 50  0001 C CNN
-F 3 "~" H 1800 2850 50  0001 C CNN
-F 4 "Farnell" H 1800 2850 50  0001 C CNN "Supplier 1"
-F 5 "2447662" H 1800 2850 50  0001 C CNN "Supplier 1 Code"
-F 6 "https://uk.farnell.com/multicomp/mcwr08x4700ftl/res-470r-1-0-125w-thick-film/dp/2447662?st=470r%200805" H 1800 2850 50  0001 C CNN "Supplier 1 Web"
-F 7 "MCWR08X4700FTL" H 1800 2850 50  0001 C CNN "Manufacturer Part"
-F 8 "0.0077" H 1800 2850 50  0001 C CNN "Supplier 1 Cost"
-F 9 "C17710" H 1800 2850 50  0001 C CNN "LCSC"
-F 10 "Y" H 1800 2850 50  0001 C CNN "JLCPCB Add"
-F 11 "0.0030" H 1800 2850 50  0001 C CNN "JLCPCB Cost"
-	1    1800 2850
+F 0 "R4" H 1620 2096 50  0000 L CNN
+F 1 "470" H 1620 2005 50  0000 L CNN
+F 2 "REInnovationFootprint:SM0805" V 1480 2050 50  0001 C CNN
+F 3 "~" H 1550 2050 50  0001 C CNN
+F 4 "Farnell" H 1550 2050 50  0001 C CNN "Supplier 1"
+F 5 "2447662" H 1550 2050 50  0001 C CNN "Supplier 1 Code"
+F 6 "https://uk.farnell.com/multicomp/mcwr08x4700ftl/res-470r-1-0-125w-thick-film/dp/2447662?st=470r%200805" H 1550 2050 50  0001 C CNN "Supplier 1 Web"
+F 7 "MCWR08X4700FTL" H 1550 2050 50  0001 C CNN "Manufacturer Part"
+F 8 "0.0077" H 1550 2050 50  0001 C CNN "Supplier 1 Cost"
+F 9 "C17710" H 1550 2050 50  0001 C CNN "LCSC"
+F 10 "Y" H 1550 2050 50  0001 C CNN "JLCPCB Add"
+F 11 "0.0030" H 1550 2050 50  0001 C CNN "JLCPCB Cost"
+	1    1550 2050
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
@@ -421,7 +421,7 @@ P 8050 2750
 AR Path="/60FFEF2E" Ref="R?"  Part="1" 
 AR Path="/60FF06B8/60FFEF2E" Ref="R6"  Part="1" 
 F 0 "R6" V 8050 2650 50  0000 L CNN
-F 1 "4k7" V 8000 2500 50  0000 L CNN
+F 1 "10k" V 8000 2500 50  0000 L CNN
 F 2 "REInnovationFootprint:SM0805" V 7980 2750 50  0001 C CNN
 F 3 "~" H 8050 2750 50  0001 C CNN
 F 4 "Farnell" H 8050 2750 50  0001 C CNN "Supplier 1"
@@ -476,7 +476,7 @@ Text Notes 6150 1300 0    50   ~ 0
 Use SMD IC for Product\n3.3V= 8MHz max.\n5V  = 16MHz max.
 Text HLabel 7050 5600 2    60   Input ~ 0
 Vcc
-Text HLabel 1800 3700 3    60   Input ~ 0
+Text HLabel 1550 2900 3    60   Input ~ 0
 GND
 Text HLabel 7250 4350 2    60   Input ~ 0
 GND
@@ -490,9 +490,9 @@ Text HLabel 4650 5600 0    60   Input ~ 0
 Vcc
 Text HLabel 4650 5450 0    60   Input ~ 0
 GND
-Text HLabel 2650 3150 3    60   Input ~ 0
+Text HLabel 2400 2650 3    60   Input ~ 0
 GND
-Text HLabel 3500 4400 3    60   Input ~ 0
+Text HLabel 2600 4300 3    60   Input ~ 0
 GND
 Text HLabel 4400 3100 0    60   Input ~ 0
 Vcc
@@ -500,14 +500,14 @@ Text HLabel 5700 1250 2    60   Input ~ 0
 Vcc
 Text HLabel 8050 2400 1    60   Input ~ 0
 Vcc
-Text Label 1800 2600 0    50   ~ 0
+Text Label 1550 1800 0    50   ~ 0
 D7
 Wire Wire Line
-	1800 3000 1800 3150
+	1550 2200 1550 2350
 Wire Wire Line
-	1800 2700 1800 2600
+	1550 1900 1550 1800
 Wire Wire Line
-	1800 3450 1800 3700
+	1550 2650 1550 2900
 Text HLabel 7250 3300 2    60   Input ~ 0
 Vcc
 Text HLabel 7750 2100 0    60   Input ~ 0
@@ -553,29 +553,29 @@ F 3 "~" H 7500 3700 50  0001 C CNN
 $EndComp
 Wire Wire Line
 	7650 3700 7900 3700
-Text HLabel 8850 2600 0    60   Input ~ 0
+Text HLabel 9350 2600 0    60   Input ~ 0
 GND
-Text HLabel 8850 2500 0    60   Input ~ 0
+Text HLabel 9350 2500 0    60   Input ~ 0
 Vcc
 $Comp
 L Connector_Generic:Conn_01x04 P10
 U 1 1 61070D8C
-P 9550 2400
-F 0 "P10" H 9630 2392 50  0000 L CNN
-F 1 "I2C" H 9630 2301 50  0000 L CNN
-F 2 "REInnovationFootprint:SIL-4_Grove_Not_Labelled" H 9550 2400 50  0001 C CNN
-F 3 "~" H 9550 2400 50  0001 C CNN
-	1    9550 2400
+P 10050 2400
+F 0 "P10" H 10130 2392 50  0000 L CNN
+F 1 "I2C" H 10130 2301 50  0000 L CNN
+F 2 "REInnovationFootprint:SIL-4_Grove_Not_Labelled" H 10050 2400 50  0001 C CNN
+F 3 "~" H 10050 2400 50  0001 C CNN
+	1    10050 2400
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	8850 2600 9350 2600
+	9350 2600 9850 2600
 Wire Wire Line
-	8850 2500 9350 2500
+	9350 2500 9850 2500
 Wire Wire Line
-	8850 2400 8900 2400
+	9350 2400 9400 2400
 Wire Wire Line
-	8850 2300 8900 2300
+	9350 2300 9400 2300
 $Comp
 L device:C C7
 U 1 1 610811F3
@@ -602,24 +602,24 @@ Wire Wire Line
 	4300 3700 4300 3950
 Wire Wire Line
 	4600 3700 4600 3950
-Text HLabel 8950 2250 2    60   Output ~ 0
+Text HLabel 9450 2250 2    60   Output ~ 0
 I2C_SCL
-Text HLabel 8950 2350 2    60   Output ~ 0
+Text HLabel 9450 2350 2    60   Output ~ 0
 I2C_SDA
 Wire Wire Line
-	8950 2350 8900 2350
+	9450 2350 9400 2350
 Wire Wire Line
-	8900 2350 8900 2400
-Connection ~ 8900 2400
+	9400 2350 9400 2400
+Connection ~ 9400 2400
 Wire Wire Line
-	8900 2400 9350 2400
+	9400 2400 9850 2400
 Wire Wire Line
-	8950 2250 8900 2250
+	9450 2250 9400 2250
 Wire Wire Line
-	8900 2250 8900 2300
-Connection ~ 8900 2300
+	9400 2250 9400 2300
+Connection ~ 9400 2300
 Wire Wire Line
-	8900 2300 9350 2300
+	9400 2300 9850 2300
 Text HLabel 6600 3500 2    60   Input ~ 0
 RXI
 Text HLabel 6600 3600 2    60   Output ~ 0
