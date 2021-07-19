@@ -3,7 +3,7 @@ EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 4 4
+Sheet 4 6
 Title ""
 Date ""
 Rev ""
@@ -13,19 +13,6 @@ Comment2 ""
 Comment3 ""
 Comment4 ""
 $EndDescr
-$Comp
-L Connector_Generic:Conn_01x06 J?
-U 1 1 60FFEDA9
-P 5350 5600
-AR Path="/60FFEDA9" Ref="J?"  Part="1" 
-AR Path="/60FF06B8/60FFEDA9" Ref="J2"  Part="1" 
-F 0 "J2" H 5430 5592 50  0000 L CNN
-F 1 "FTDI" H 5430 5501 50  0000 L CNN
-F 2 "REInnovationFootprint:TH_6x1_FTDI" H 5350 5600 50  0001 C CNN
-F 3 "~" H 5350 5600 50  0001 C CNN
-	1    5350 5600
-	1    0    0    -1  
-$EndComp
 Text Label 4900 5900 0    50   ~ 0
 DTR
 Text Label 4900 5400 0    50   ~ 0
@@ -571,10 +558,10 @@ GND
 Text HLabel 8850 2500 0    60   Input ~ 0
 Vcc
 $Comp
-L Connector_Generic:Conn_01x04 J3
+L Connector_Generic:Conn_01x04 P10
 U 1 1 61070D8C
 P 9550 2400
-F 0 "J3" H 9630 2392 50  0000 L CNN
+F 0 "P10" H 9630 2392 50  0000 L CNN
 F 1 "I2C" H 9630 2301 50  0000 L CNN
 F 2 "REInnovationFootprint:SIL-4_Grove_Not_Labelled" H 9550 2400 50  0001 C CNN
 F 3 "~" H 9550 2400 50  0001 C CNN
@@ -745,4 +732,17 @@ Wire Wire Line
 	4200 1800 5000 1800
 Wire Wire Line
 	4200 2200 4200 2400
+$Comp
+L Connector_Generic:Conn_01x06 J?
+U 1 1 60FFEDA9
+P 5350 5600
+AR Path="/60FFEDA9" Ref="J?"  Part="1" 
+AR Path="/60FF06B8/60FFEDA9" Ref="P9"  Part="1" 
+F 0 "P9" H 5430 5592 50  0000 L CNN
+F 1 "PROG" H 5430 5501 50  0000 L CNN
+F 2 "REInnovationFootprint:TH_6x1_FTDI" H 5350 5600 50  0001 C CNN
+F 3 "~" H 5350 5600 50  0001 C CNN
+	1    5350 5600
+	1    0    0    -1  
+$EndComp
 $EndSCHEMATC
