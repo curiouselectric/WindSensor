@@ -22,12 +22,12 @@
 #define DEBUG_DATA_600S   false   // Use this for debugging. Not need for roll out.
 #define DEBUG_DATA_3600S  false   // Use this for debugging. Not need for roll out.
 
-#define NUM_CHANNELS  2             // 13 is the maximum before hitting memory issues!!
-                                    // This holds:
-                                    // Wind speed pulses (and max)
-                                    // Wind vane direction average (and variability - store min and max)
+#define NUM_CHANNELS      1       // 13 is the maximum before hitting memory issues!!
+                                  // This holds:
+                                  // Wind speed pulses (and min and max)
+                                  // Wind vane analog value (averaged - min and max dont mean anything!)
                                     
-#define DEBOUNCE_DELAY  5       // debounce delay time in milli-Seconds This also gives max pulses - 50mS = 20 pulses per second                                   
+#define DEBOUNCE_DELAY    5       // debounce delay time in milli-Seconds This also gives max pulses - 50mS = 20 pulses per second                                   
                             
 // These three digital pins are for the Device ID selection:
 #define  GPIO_ID0      A0  //  A0 Digital 4 on Arduino

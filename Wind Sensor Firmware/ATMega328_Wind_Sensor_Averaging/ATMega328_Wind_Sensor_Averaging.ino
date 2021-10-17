@@ -84,7 +84,7 @@
 #include "Button2.h"      // Need to include this to the library
 #include "config.h"
 #include "serial_parse.h"
-#include "average_data.h"
+#include "anemometer_data.h"
 #include "utilitiesDL.h"
 #include "PulseCounter.h"
 #include "wind_vane.h"
@@ -172,8 +172,6 @@ int           flow_control = 0;           // This defines if flow meters are att
 uint32_t      led_flash_timer = millis();
 bool          led_update_flag = true;
 int           vane_training_direction = 0;    // This is used for the vane training mode
-String        vane_directions[8] = {"N","NE","E","SE","S","SW","W","NW"};   // Holds the array of different directions
-//long int      data_random;
 
 volatile int  data_counter_1s = 0;
 volatile int  data_counter_10s = 0;
@@ -192,8 +190,7 @@ void t1Callback() {
   //channels[1].data_1s_holder += analogRead(VANE_PIN); // OLD
   uint16_t vane_value = analogRead(VANE_PIN);
   wind_vane_data.build_direction_array(vane_value);
-  channels[1].data_1s_holder += vane_value;
-
+  
   // It will then be averaged for 1s, 10s, 60s 10min and 1 hour averages
   data_counter_1s++;   // This counts the correct number of samples we take within the 1S sample period. Used for averaging.
 }
@@ -240,7 +237,10 @@ void t1SCallback() {
       Serial.print(F("\t :"));
       Serial.print((String)channels[0].data_max); // Print the 1 second data
       Serial.print(F("\t :"));
-      Serial.print((String)channels[1].data_1s); // Print the 1 second data for the wind vane
+      Serial.print((String)analogRead(VANE_PIN)); // Print the instantaneous value of the wind vane
+      Serial.print(F("\t :"));
+      Serial.print(wind_vane_data.return_direction(analogRead(VANE_PIN))); // Print the instantaneous value of the wind vane as a direction
+      
       Serial.print(F("\t A:"));
       for (int y = 0; y < 8; y++)
       {
@@ -258,7 +258,7 @@ void t1SCallback() {
     {
       Serial.print(F("Training: \t"));
       // Want to convert the number 0-7 into direction N-NW)
-      Serial.print(vane_directions[vane_training_direction]);
+      Serial.print(wind_vane_data.vane_directions[vane_training_direction]);
       Serial.print(F("\tValue: \t"));      
       Serial.println((String)channels[1].data_1s); // Print the 1 second data for the wind vane     
     }
@@ -740,6 +740,8 @@ void loop()
       }
       else if (checkData.data_reset_flag == true)
       {
+        // Want to reset the wind vane direction data as previous will be wrong!
+        wind_vane_data.reset_vane_direction_array();
         returnString = F("aaRESET#");   // This needs to be returned
         checkData.data_reset_flag = false;
         checkData.data_sent_flag = false;

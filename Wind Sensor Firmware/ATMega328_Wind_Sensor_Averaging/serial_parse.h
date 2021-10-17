@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <Arduino.h>
 #include "config.h"
-#include "average_data.h"
+#include "anemometer_data.h"
 
 // This class takes in an input string, parses it and returns the ID and AVE values if they are OK
 // If not it returns an error message

@@ -149,20 +149,6 @@ void wind_vane_array::find_rollover_index()
 void wind_vane_array::build_direction_array(uint16_t _vane_value)
 {
   // This routine takes the vane data and figures out which direction it is and saves into the direction_array
-  // For the cheap Maplin sensor we have the following:
-  //  The resistances are as follows, with all the resistors accurate to 1%.
-  // Using a potential divider of 10k for the lower resistor and an input voltage equal to the reference voltage,
-  // we can also calculate the analogue input values for each range (using the potential divider calculation where the output reading will be (10k/(10k+R))*1024):
-  //
-  //R1 = 33k    => 238
-  //R2 = 8.2k   => 562
-  //R3 = 1k     => 930
-  //R4 = 2.2k   => 839
-  //R5 = 3.9k   => 736
-  //R6 = 16k    => 394
-  //R7 = 120k   => 79
-  //R8 = 64.9k  => 137
-  // Depending upon the value, we increment different parts of the wind vane array
 
   for (int y = 0; y < 8; y++)
   {
@@ -210,5 +196,26 @@ void wind_vane_array::reset_vane_direction_array()
     direction_array_values[y] = 0;
     direction_array[y] = 0;
   }
-  Serial.println(F("Reset Vane Data"));
+  // Serial.println(F("Reset Vane Data"));
+}
+
+String wind_vane_array::return_direction(uint16_t _vane_value)
+{
+  // This takes the direction value. 
+  // It then returns the direction as a string...
+  for (int y = 0; y < 8; y++)
+  {
+    // If its the special case then we need to change things:
+    if (y == vane_rollover_index)
+    {
+      if ((_vane_value > vane_lower_bands[y] && _vane_value <= 1024) || (_vane_value >= 0 && _vane_value < vane_upper_bands[y]))
+      {
+        return (vane_directions[y]);
+      }
+    }
+    else if (_vane_value > vane_lower_bands[y] && _vane_value <= vane_upper_bands[y])
+    {
+      return (vane_directions[y]);
+    }
+  }
 }

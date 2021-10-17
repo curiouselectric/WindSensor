@@ -1,5 +1,5 @@
 #include "serial_parse.h"
-#include "average_data.h"
+#include "anemometer_data.h"
 #include <EEPROM.h>       // for saving mode to EEPROM
 
 String check_data::parseData(String _inputString, byte _UNIT_ID, data_channel _local_channels[])
@@ -116,6 +116,7 @@ String check_data::parseData(String _inputString, byte _UNIT_ID, data_channel _l
             {
               _local_channels[j].data_min = 99999;
             }
+
             data_sent_flag = false;
             data_min_flag = false;
             data_max_flag  = false;
