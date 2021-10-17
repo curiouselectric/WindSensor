@@ -81,36 +81,12 @@ Wire Wire Line
 	6050 4500 6050 3600
 Wire Wire Line
 	6050 3600 5650 3600
-$Comp
-L matts_components:ZENER D3
-U 1 1 60F78EC4
-P 6850 4150
-F 0 "D3" V 6804 4229 50  0000 L CNN
-F 1 "5V1_Zener" V 6895 4229 50  0000 L CNN
-F 2 "REInnovationFootprint:SOT23" H 6850 4150 50  0001 C CNN
-F 3 "" H 6850 4150 50  0000 C CNN
-	1    6850 4150
-	0    1    1    0   
-$EndComp
-$Comp
-L matts_components:ZENER D1
-U 1 1 60F79780
-P 4200 4050
-F 0 "D1" V 4154 4129 50  0000 L CNN
-F 1 "5V1_Zener" V 4245 4129 50  0000 L CNN
-F 2 "REInnovationFootprint:SOT23" H 4200 4050 50  0001 C CNN
-F 3 "" H 4200 4050 50  0000 C CNN
-	1    4200 4050
-	0    1    1    0   
-$EndComp
-Text HLabel 3550 3250 1    60   Input ~ 0
+Text HLabel 3550 2550 1    60   Input ~ 0
 Vcc
 Text HLabel 3550 4400 3    60   Input ~ 0
 GND
 Wire Wire Line
 	3350 3350 3550 3350
-Wire Wire Line
-	3550 3350 3550 3250
 Wire Wire Line
 	4200 4250 3550 4250
 Wire Wire Line
@@ -121,7 +97,7 @@ Wire Wire Line
 	3550 4400 3550 4250
 Connection ~ 3550 4250
 Wire Wire Line
-	3350 3500 4200 3500
+	3350 3500 4000 3500
 Wire Wire Line
 	4200 3850 4200 3500
 Connection ~ 4200 3500
@@ -137,6 +113,65 @@ Wire Wire Line
 	6850 3600 7100 3600
 Wire Wire Line
 	6050 3600 6850 3600
+$Comp
+L matts_components:ZENERsmall D?
+U 1 1 610F8DED
+P 4200 3950
+AR Path="/60F57495/610F8DED" Ref="D?"  Part="1" 
+AR Path="/60FC880C/610F8DED" Ref="D1"  Part="1" 
+F 0 "D1" V 4154 4019 50  0000 L CNN
+F 1 "5V1_Zener" V 4245 4019 50  0000 L CNN
+F 2 "REInnovationFootprint:SOT23_ZENER" H 4200 3950 50  0001 C CNN
+F 3 "" H 4200 3950 50  0000 C CNN
+F 4 "C131770" H 4200 3950 50  0001 C CNN "LCSC"
+F 5 "Y" H 4200 3950 50  0001 C CNN "JLCPCB Add"
+	1    4200 3950
+	0    1    1    0   
+$EndComp
+$Comp
+L matts_components:ZENERsmall D?
+U 1 1 610F9246
+P 6850 4050
+AR Path="/60F57495/610F9246" Ref="D?"  Part="1" 
+AR Path="/60FC880C/610F9246" Ref="D3"  Part="1" 
+F 0 "D3" V 6804 4119 50  0000 L CNN
+F 1 "5V1_Zener" V 6895 4119 50  0000 L CNN
+F 2 "REInnovationFootprint:SOT23_ZENER" H 6850 4050 50  0001 C CNN
+F 3 "" H 6850 4050 50  0000 C CNN
+F 4 "C131770" H 6850 4050 50  0001 C CNN "LCSC"
+F 5 "Y" H 6850 4050 50  0001 C CNN "JLCPCB Add"
+	1    6850 4050
+	0    1    1    0   
+$EndComp
 Wire Wire Line
-	6850 4350 6850 4650
+	4200 4250 4200 4050
+Wire Wire Line
+	6850 4150 6850 4650
+$Comp
+L Device:R R?
+U 1 1 6165E116
+P 4000 3050
+F 0 "R?" H 4070 3096 50  0000 L CNN
+F 1 "10k" H 4070 3005 50  0000 L CNN
+F 2 "" V 3930 3050 50  0001 C CNN
+F 3 "~" H 4000 3050 50  0001 C CNN
+	1    4000 3050
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3550 2550 3550 2700
+Wire Wire Line
+	4000 3200 4000 3500
+Connection ~ 4000 3500
+Wire Wire Line
+	4000 3500 4200 3500
+Wire Wire Line
+	4000 2900 4000 2700
+Wire Wire Line
+	4000 2700 3550 2700
+Connection ~ 3550 2700
+Wire Wire Line
+	3550 2700 3550 3350
+Text Notes 4050 2850 0    50   ~ 0
+Potential divider here:\n10k for the Maplin vane
 $EndSCHEMATC

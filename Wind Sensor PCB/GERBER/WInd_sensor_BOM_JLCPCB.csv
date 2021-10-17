@@ -1,0 +1,28 @@
+Comment,Designator,Footprint,LCSC Part Number
+22p,"C9,C10",REInnovationFootprint:SM_C_0805,C1804
+22n,C2,REInnovationFootprint:SM_C_0805,C1804
+100n,"C3,C4,C5,C7,C8",REInnovationFootprint:SM_C_0805,C49678
+100u,C6,REInnovationFootprint:SM_6.3x7.7,C164071
+5V1_Zener,"D1,D3",REInnovationFootprint:SOT23_ZENER,C131770
+LED0,D2,REInnovationFootprint:SM0805_LED,C2296
+3V3_Zener,D4,REInnovationFootprint:SOT23_ZENER,C130247
+I2C,P10,REInnovationFootprint:SIL-4_Grove_Not_Labelled,
+WIND_A,P11,REInnovationFootprint:SIL-3_screw_terminal,
+SERIAL,P2,REInnovationFootprint:SIL-4_Grove_SCREW,
+ID,P3,REInnovationFootprint:SM_6pad_3W_SOLDER,
+ISP,P4,REInnovationFootprint:ISP_3x2,
+LOGO2,P5,CuriousElectric3:TCEC_Words_13mm,
+PCB,P6,REInnovationFootprint:PCB_45_45_Cut_Out_Solar_Sensor,
+ENC,P7,,
+VANE,P8,REInnovationFootprint:SIL-3_screw_terminal,
+PROG,P9,REInnovationFootprint:TH_6x1_FTDI,
+4M7,R11,REInnovationFootprint:SM0805,C17674
+4k7,"R2,R3",REInnovationFootprint:SM0805, C17673
+470,R4,REInnovationFootprint:SM0805,C17710
+10k,"R5,R6,R7,R10",REInnovationFootprint:SM0805,C17673
+100k,"R8,R9",REInnovationFootprint:SM0805,C17407
+SWA,SW1,REInnovationFootprint:SMD_SW_6x3_5,C412368
+RST,SW2,REInnovationFootprint:SMD_SW_6x3_5,C412368
+TSV911xxLx,"U1,U2",REInnovationFootprint:SM_SOT-23-5,C361052
+ATmega328P-AU,U4,REInnovationFootprint:TQFP32-08,C14877
+8MHz_XTAL,Y1,REInnovationFootprint:SM-crystal-HC49UP,C12674
