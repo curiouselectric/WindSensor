@@ -15,12 +15,17 @@
 //// The baud rate for serial communications
 #define MAX_BAUD_RATES    5
 
-#define DEBUG_FLAG        false   // Use this for debugging. Not need for roll out.
+#define DEBUG_FLAG        false    // Use this for debugging. Not need for roll out.
 #define DEBUG_DATA_1S     false   // Use this for debugging. Not need for roll out.
 #define DEBUG_DATA_10S    false   // Use this for debugging. Not need for roll out.
 #define DEBUG_DATA_60S    false   // Use this for debugging. Not need for roll out.
 #define DEBUG_DATA_600S   false   // Use this for debugging. Not need for roll out.
 #define DEBUG_DATA_3600S  false   // Use this for debugging. Not need for roll out.
+
+#define NUM_CHANNELS      1       // 13 is the maximum before hitting memory issues!!
+                                  // This holds:
+                                  // Wind speed pulses (and min and max)
+                                  // Wind vane analog value (averaged - min and max dont mean anything!)
                                     
 #define DEBOUNCE_DELAY    5       // debounce delay time in milli-Seconds This also gives max pulses - 50mS = 20 pulses per second                                   
                             

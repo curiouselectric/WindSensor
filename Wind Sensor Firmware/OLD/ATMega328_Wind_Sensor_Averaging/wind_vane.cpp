@@ -2,20 +2,17 @@
 #include <EEPROM.h>       // for saving mode to EEPROM
 
 
-void wind_vane_array::find_lower_bands(bool _debug)
+void wind_vane_array::find_lower_bands()
 {
   // Here we calculate the upper and lower bands for the wind vane measurments:
-  if (_debug == true)
+  Serial.print(F("BANDS\t"));
+  for (int y = 0; y < 8; y++)
   {
-    Serial.print(F("BANDS\t"));
-    for (int y = 0; y < 8; y++)
-    {
-      Serial.print(F("\t :"));
-      // Print the direction array
-      Serial.print(vane_bands[y]);
-    }
-    Serial.println();
+    Serial.print(F("\t :"));
+    // Print the direction array
+    Serial.print(vane_bands[y]);
   }
+  Serial.println();
   // Here we calculate the lower band for each vane_band element. Need to find the next closest lower value (!)
   for (int y = 0; y < 8; y++)
   {
@@ -53,20 +50,18 @@ void wind_vane_array::find_lower_bands(bool _debug)
       vane_lower_bands[y] = (value + vane_bands[index_lower]) / 2;
     }
   }
-  if (_debug == true)
+
+  Serial.print(F("LOWER BANDS"));
+  for (int y = 0; y < 8; y++)
   {
-    Serial.print(F("LOWER BANDS"));
-    for (int y = 0; y < 8; y++)
-    {
-      Serial.print(F("\t :"));
-      // Print the direction array
-      Serial.print(vane_lower_bands[y]);
-    }
-    Serial.println();
+    Serial.print(F("\t :"));
+    // Print the direction array
+    Serial.print(vane_lower_bands[y]);
   }
+  Serial.println();
 }
 
-void wind_vane_array::find_upper_bands(bool _debug)
+void wind_vane_array::find_upper_bands()
 {
   // Here we calculate the upper band for each vane_band element. Need to find the next closest value above(!)
   for (int y = 0; y < 8; y++)
@@ -105,21 +100,18 @@ void wind_vane_array::find_upper_bands(bool _debug)
       vane_upper_bands[y] = (value + vane_bands[index_higher]) / 2;
     }
   }
-  if (_debug == true)
+  Serial.print(F("UPPER BANDS"));
+  for (int y = 0; y < 8; y++)
   {
-    Serial.print(F("UPPER BANDS"));
-    for (int y = 0; y < 8; y++)
-    {
-      Serial.print(F("\t :"));
-      // Print the direction array
-      Serial.print(vane_upper_bands[y]);
-    }
-    Serial.println();
+    Serial.print(F("\t :"));
+    // Print the direction array
+    Serial.print(vane_upper_bands[y]);
   }
+  Serial.println();
 }
 
 
-void wind_vane_array::find_rollover_index(bool _debug)
+void wind_vane_array::find_rollover_index()
 {
   // This finds the value closest to either 0 or 1024.
   // The index of this is the value which rolls over from 1024 to 0, so need to know it
@@ -150,11 +142,8 @@ void wind_vane_array::find_rollover_index(bool _debug)
     }
   }
   vane_rollover_index = closest_index;
-  if (_debug == true)
-  {
-    Serial.print(F("ROLLOVER:"));
-    Serial.println(vane_rollover_index);
-  }
+  Serial.print(F("ROLLOVER:"));
+  Serial.println(vane_rollover_index);
 }
 
 void wind_vane_array::build_direction_array(uint16_t _vane_value)
@@ -212,7 +201,7 @@ void wind_vane_array::reset_vane_direction_array()
 
 String wind_vane_array::return_direction(uint16_t _vane_value)
 {
-  // This takes the direction value.
+  // This takes the direction value. 
   // It then returns the direction as a string...
   for (int y = 0; y < 8; y++)
   {

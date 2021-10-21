@@ -24,40 +24,28 @@
    More construction details are here:
    *** link to web page for design documentation ***
 
+   This code works with an ADC and the serial port
+   It reads the ADC and temperature sensor at regular time intervals
    It returns the average values when requested on serial port
    At all other times then the unit is asleep.
 
-  Here we parse the data we get on the serial port
-  Wind Speed data:                    “aaI0WSA4#”   Where 0 is an ID from 0-9 set by solder on PCB. 4 is the averaging period (0=1s, 1=10s, 2 = 60s, 3 = 600s, 4=3600s)
-                                      Returns:  "aaWSA0:3.00#"  // Where 3.00 is the data
-  Wind Speed data minimum is:         “aaI0WSMN#”  - does not matter what averaging period. min/max are just the min/max seen at max data rate.
-                                      Returns: "aaWSMN:3.00#"  // Where 3.00 is the data
-  Wind Speed data maximum data is:    “aaI0WSMX#”  - does not matter what averaging period. min/max are just the min/max seen at max data rate.
-                                      Returns: "aaWSMX:3.00#"  // Where 3.00 is the data
+   My implementation:
+   Recieve data:
+   “aaI*R01A4#”
+   Where “aa” is just a start code
+   "I" gives the ID of the sensor controller unit.
+   "*" is the ID of the sensor controller & means multiple sensors units can be attached to one upload controller.
+   “R” means read data
+   “01” is a sensor number – one of these for each sensor attached. Up to 24.
+   Sensor 00 is for the battery voltage, sensors 01-24 are for the external attached sensors.
+   “A” means averaging period
+   “4” is the averaging period in seconds.
+   This can be (0) 1s, (1) 10s, (2) 60s, (3) 600s, (4) 3600s, for 1 second, 10 second, 1 min, 10 min and 1 hour averaging. No other values allowed.
+   “#” is just an end character.
 
-  Wind Vane data:                    “aaI0WV#”   Where 0 is an ID from 0-9 set by solder on PCB. 4 is the averaging period (0=1s, 1=10s, 2 = 60s, 3 = 600s, 4=3600s)
-                                     Returns:    The instantaneuous direction AND the direction array data
-                                     Returns:    "aaWV=W:0.00:0.00:0.00:0.00:0.00:0.00:62.00:0.00#"
+   If data is not that length or does not have 'aa' and '#' at start/end then return with send "aaFAIL**#" error code
 
-  Reset the max, min and wind vane array:   "aaI0RESET#"
-                                     Returns: "aaRESET#"
-
-  What is baud rate?:                 "aaI0BD#"
-                                      Returns: "aaBD9600#"  // Where 9600 is the baud rate
-  Set Baud Rate:                      "aaI0STBD*#"  Where * is (0)1200, (1)2400, (2)9600, (3)57600, (4)115200
-                                      Returns: "aaBD9600#"   // Where 9600 is the baud rate
-
-  What is ID?:                        Mentioned at start up of unit - it is solder-programmed... cannot be changed in code.
-
-  Enter vane training mode:           "aaI0VT#"
-                                      Returns: Enter the vane training routine - use button to go through the different directiosn and set the values
-  What is Anemometer converstion?:    "aaI0WSCON#"
-                                      Returns: "aaI0STWSCONm123.4c567.89#" (from stored values)
-  Set the Anemometer conversion:      "aaI0WSSTm123.4c567.89#"   Where 123.4 is the gradient and 567.89 is the constant (y=mx+c)
-                                      Returns: "aaI0STWSSETm123.4c567.89#" (set to the new values)
-
-  If data is not that length or does not have 'aa' and '#' at start/end then return with send "aaFAIL**#" error code
-  Failure codes:
+  /* Failure codes:
     "aaFAIL1#" = String too long
     "aaFAIL2#" = Unit ID not correct/not a number
     "aaFAIL3#" = Channel ID is not correct/not a number
@@ -65,9 +53,25 @@
     "aaFAIL5#" = Start/End chars not correct
     "aaFAILID#" = Channel ID not correct
     "aaFAILID#" = Ave Value not correct
+*/
+
+/*
+  The returned data will be:
+  “aaD01A12345MN12345MX12345#”
+
+  This returns “aaD01” which is a repeat of the sensor number requested.
+  Then “A”  which is the average value for the sample period requested which can be a value from 00000 to 99999 (16 bit value in decimal format).
+  Then “MN” which is the minimum value for the sample period requested which can be a value from 00000 to 99999 (16 bit value in decimal format).
+  Then “MX” which is the maximum value for the sample period requested which can be a value from 00000 to 99999 (16 bit value in decimal format).
+  “#” is just an end character.
+
+  If a serial command “aaI*RESET#” is sent then (if the ID matches) the Max and Min are reset
+  This is to ensure data transfer before reset.
 
   Based on:
   http://www.arduino.cc/en/Tutorial/SerialEvent
+
+  // TO DO:
 
 */
 
@@ -149,7 +153,7 @@ check_data   checkData;
 
 // *********** This is for the data holders *************************
 // Want to create a data class for each channel, up to max of NUM_CHANNELS
-data_channel wind_speed_data;    // This creates our data channels
+data_channel channels[NUM_CHANNELS];    // This creates our data channels
 
 // *********** This is for the pulse counter ***********************
 pulse_counter_ pulse_counter;
@@ -183,11 +187,10 @@ void t1Callback() {
   // Check the wind vane
   // Need to convert the data into a direction in degrees (0-360)
   // This is then stored along with variation between the values (turbulance?)
-
+  //channels[1].data_1s_holder += analogRead(VANE_PIN); // OLD
   uint16_t vane_value = analogRead(VANE_PIN);
-  wind_vane_data.data_1s_holder += vane_value;
   wind_vane_data.build_direction_array(vane_value);
-
+  
   // It will then be averaged for 1s, 10s, 60s 10min and 1 hour averages
   data_counter_1s++;   // This counts the correct number of samples we take within the 1S sample period. Used for averaging.
 }
@@ -195,33 +198,27 @@ void t1Callback() {
 void t1SCallback() {
   if (!t1S.isFirstIteration())
   {
-
-    // ********* Sort out the wind speed ************************
-    wind_speed_data.data_1s = (float) pulse_counter.pulse_counter_1;    // Store it here, in case it updates during this analysis
+    int32_t dataValue = pulse_counter.pulse_counter_1;    // Store it here, in case it updates during this analysis
     pulse_counter.pulse_counter_1 = 0;      // reset the value
 
-    // ******** Convert pulses into the wind speed here **********
-
-    // wind_speed_data.data_1s - convert as a y=mx+c
-    wind_speed_data.data_1s = (wind_speed_data.data_1s * wind_speed_data.wind_speed_conv_m) + wind_speed_data.wind_speed_conv_c;
-
-    // ***********************************************************
+    channels[0].data_1s = dataValue;
     // Here we set the max and min for the anemometer data
-    if (wind_speed_data.data_1s < wind_speed_data.data_min)
+    if (dataValue < channels[0].data_min)
     {
-      wind_speed_data.data_min = wind_speed_data.data_1s;
+      channels[0].data_min = dataValue;
     }
-    if (wind_speed_data.data_1s > wind_speed_data.data_max)
+    if (dataValue > channels[0].data_max)
     {
-      wind_speed_data.data_max = wind_speed_data.data_1s;
+      channels[0].data_max = dataValue;
     }
     // reset the data holder
-    wind_speed_data.data_1s_holder  = 0;    // Reset the value
-    wind_speed_data.data_10s_holder += wind_speed_data.data_1s; // Increment the 10s average
+    channels[0].data_1s_holder  = 0;    // Reset the value
 
-    //  ********** Sort out the Wind Vane ***********************************
-    wind_vane_data.data_1s = wind_vane_data.data_1s_holder / data_counter_1s;
-    wind_vane_data.data_1s_holder = 0;      // Reset the holder
+
+    // Here we need to sort out the wind vane direction value
+    channels[1].data_1s = channels[1].data_1s_holder / data_counter_1s;
+    // reset the data holder
+    channels[1].data_1s_holder  = 0;    // Reset the value
 
     // Convert the direction_array into average number of seconds in each direction:
     for (int y = 0; y < 8; y++)
@@ -234,16 +231,16 @@ void t1SCallback() {
     if (DEBUG_DATA_1S == true || display_1s_data == true)
     {
       Serial.print(F("1s: "));
-      Serial.print((String)wind_speed_data.data_1s); // Print the 1 second data for the wind speed
+      Serial.print((String)channels[0].data_1s); // Print the 1 second data for the wind speed
       Serial.print(F("\t :"));
-      Serial.print((String)wind_speed_data.data_min); // Print the 1 second data
+      Serial.print((String)channels[0].data_min); // Print the 1 second data
       Serial.print(F("\t :"));
-      Serial.print((String)wind_speed_data.data_max); // Print the 1 second data
+      Serial.print((String)channels[0].data_max); // Print the 1 second data
       Serial.print(F("\t :"));
-      Serial.print((String)wind_vane_data.data_1s); // Print the instantaneous value of the wind vane
+      Serial.print((String)analogRead(VANE_PIN)); // Print the instantaneous value of the wind vane
       Serial.print(F("\t :"));
       Serial.print(wind_vane_data.return_direction(analogRead(VANE_PIN))); // Print the instantaneous value of the wind vane as a direction
-
+      
       Serial.print(F("\t A:"));
       for (int y = 0; y < 8; y++)
       {
@@ -262,8 +259,8 @@ void t1SCallback() {
       Serial.print(F("Training: \t"));
       // Want to convert the number 0-7 into direction N-NW)
       Serial.print(wind_vane_data.vane_directions[vane_training_direction]);
-      Serial.print(F("\tValue: \t"));
-      Serial.println((String)wind_speed_data.data_1s); // Print the 1 second data for the wind vane
+      Serial.print(F("\tValue: \t"));      
+      Serial.println((String)channels[1].data_1s); // Print the 1 second data for the wind vane     
     }
 
     // Every second we recheck the bits of the UNIT_ID
@@ -280,18 +277,22 @@ void t10SCallback() {
   if (!t10S.isFirstIteration())
   {
     // 10 second averages
-
-    wind_speed_data.data_10s = (float) wind_speed_data.data_10s_holder / (float) data_counter_10s;
-    // reset all the data holders
-    wind_speed_data.data_10s_holder  = 0;    // Reset the value
-    // Add on values for next average
-    wind_speed_data.data_60s_holder += wind_speed_data.data_10s;    // This is for the 60S averages
-
+    for (int j = 0; j < NUM_CHANNELS; j++)
+    {
+      channels[j].data_10s = (float)channels[j].data_10s_holder / (float)data_counter_10s;
+      // reset all the data holders
+      channels[j].data_10s_holder  = 0;    // Reset the value
+      // Add on values for next average
+      channels[j].data_60s_holder += channels[j].data_10s;    // This is for the 60S averages
+    }
     if (DEBUG_DATA_10S == true)
     {
       Serial.print(F("10s: "));
-      Serial.print((String)wind_speed_data.data_10s); // Print the 1 second data
-      Serial.print(F("\t : \t"));
+      for (int y = 0; y < NUM_CHANNELS; y++)
+      {
+        Serial.print((String)channels[y].data_10s); // Print the 1 second data
+        Serial.print(F("\t : \t"));
+      }
       Serial.print(F(" N: "));
       Serial.println(data_counter_10s);
     }
@@ -304,17 +305,22 @@ void t60SCallback() {
   if (!t60S.isFirstIteration())
   {
     // 1 minute averages
-    wind_speed_data.data_60s = (float)wind_speed_data.data_60s_holder / (float)data_counter_60s;
-    // reset all the data holders
-    wind_speed_data.data_60s_holder  = 0;
-    // This is for the 600S averages
-    wind_speed_data.data_600s_holder += wind_speed_data.data_60s;
-
+    for (int j = 0; j < NUM_CHANNELS; j++)
+    {
+      channels[j].data_60s = (float)channels[j].data_60s_holder / (float)data_counter_60s;
+      // reset all the data holders
+      channels[j].data_60s_holder  = 0;
+      // This is for the 600S averages
+      channels[j].data_600s_holder += channels[j].data_60s;
+    }
     if (DEBUG_DATA_60S == true)
     {
       Serial.print(F("60s: "));
-      Serial.print((String)wind_speed_data.data_60s); // Print the 1 second data
-      Serial.print(F("\t : \t"));
+      for (int y = 0; y < NUM_CHANNELS; y++)
+      {
+        Serial.print((String)channels[y].data_60s); // Print the 1 second data
+        Serial.print(F("\t : \t"));
+      }
       Serial.print(F(" N: "));
       Serial.println(data_counter_60s);
     }
@@ -327,17 +333,23 @@ void t600SCallback() {
   // 10 minute averages
   if (!t600S.isFirstIteration())
   {
-    wind_speed_data.data_600s = (float)wind_speed_data.data_600s_holder / (float)data_counter_600s;
-    // reset all the data holders
-    wind_speed_data.data_600s_holder  = 0;    // Reset the value
-    // This is for the 3600S averages
-    wind_speed_data.data_3600s_holder += wind_speed_data.data_600s;
+    for (int j = 0; j < NUM_CHANNELS; j++)
+    {
+      channels[j].data_600s = (float)channels[j].data_600s_holder / (float)data_counter_600s;
+      // reset all the data holders
+      channels[j].data_600s_holder  = 0;    // Reset the value
+      // This is for the 3600S averages
+      channels[j].data_3600s_holder += channels[j].data_600s;
+    }
 
     if (DEBUG_DATA_600S == true)
     {
       Serial.print(F("600s: "));
-      Serial.print((String)wind_speed_data.data_600s); // Print the 1 second data
-      Serial.print(F("\t : \t"));
+      for (int y = 0; y < NUM_CHANNELS; y++)
+      {
+        Serial.print((String)channels[y].data_600s); // Print the 1 second data
+        Serial.print(F("\t : \t"));
+      }
       Serial.print(F(" N: "));
       Serial.println(data_counter_600s);
     }
@@ -351,16 +363,22 @@ void t3600SCallback() {
   // 10 minute averages
   if (!t3600S.isFirstIteration())
   {
-    // 1 hour averages
-    wind_speed_data.data_3600s = (float)wind_speed_data.data_3600s_holder / (float)data_counter_3600s;
-    // reset all the data holders
-    wind_speed_data.data_3600s_holder  = 0;    // Reset the value
+    for (int j = 0; j < NUM_CHANNELS; j++)
+    {
+      // 1 hour averages
+      channels[j].data_3600s = (float)channels[j].data_3600s_holder / (float)data_counter_3600s;
+      // reset all the data holders
+      channels[j].data_3600s_holder  = 0;    // Reset the value
+    }
 
     if (DEBUG_DATA_3600S == true)
     {
       Serial.print(F("3600s: "));
-      Serial.print((String)wind_speed_data.data_3600s); // Print the 1 second data
-      Serial.print(F("\t : \t"));
+      for (int y = 0; y < NUM_CHANNELS; y++)
+      {
+        Serial.print((String)channels[y].data_3600s); // Print the 1 second data
+        Serial.print(F("\t : \t"));
+      }
       Serial.print(F(" N: "));
       Serial.println(data_counter_3600s);
     }
@@ -387,9 +405,8 @@ void tap(Button2 & btn)
     {
       // If this is the case then the button just goes through the different directions
       // Want to store the vane_direction value into EEPROM at the correct location:
-
-      // We store the 1 second average here:
-      wind_vane_data.write_direction_array(vane_training_direction, analogRead(VANE_PIN) );
+      // We stiore the 1 second average here:
+      wind_vane_data.write_direction_array(vane_training_direction, channels[1].data_1s );
 
       // Then increment the counter (next direction)
       vane_training_direction++;
@@ -400,12 +417,13 @@ void tap(Button2 & btn)
         checkData.vane_training_mode = false;
         // Need to figure out the bands again:
         wind_vane_data.read_direction_array();  // Gets data from EEPROM
-        wind_vane_data.find_lower_bands(DEBUG_FLAG);
-        wind_vane_data.find_upper_bands(DEBUG_FLAG);
-        wind_vane_data.find_rollover_index(DEBUG_FLAG);
+        wind_vane_data.find_lower_bands();
+        wind_vane_data.find_upper_bands();
+        wind_vane_data.find_rollover_index();
 
         // Want to reset the wind vane direction data as previous will be wrong!
         wind_vane_data.reset_vane_direction_array();
+        
         Serial.println(F("Finished Training"));
       }
     }
@@ -459,10 +477,6 @@ void setup() {
   errorString.reserve(15);
   returnString.reserve(100);
 
-  // Get the m and c wind speed conversion data
-  EEPROM.get(100, wind_speed_data.wind_speed_conv_m);
-  EEPROM.get(110, wind_speed_data.wind_speed_conv_c);
-
   // Read in the digital pins to check the Unit ID
   // This reads in three digital pins to set the Unit ID
   // UNIT_ID is a 8 bit byte
@@ -484,16 +498,22 @@ void setup() {
   Wire.begin();   // Start the I2C bus
   delay(10);
 
+
   // Flash LEDs for test
   pinMode(LED0_PIN, OUTPUT);
   digitalWrite(LED0_PIN, HIGH);
   delay(100);
   digitalWrite(LED0_PIN, LOW);
 
+  //  for (int x = 0; x < 8; x++)
+  //  {
+  //    wind_vane_data.write_direction_array(x, (x * 100));
+  //  }
+
   wind_vane_data.read_direction_array();  // Gets data from EEPROM
-  wind_vane_data.find_lower_bands(DEBUG_FLAG);
-  wind_vane_data.find_upper_bands(DEBUG_FLAG);
-  wind_vane_data.find_rollover_index(DEBUG_FLAG);
+  wind_vane_data.find_lower_bands();
+  wind_vane_data.find_upper_bands();
+  wind_vane_data.find_rollover_index();
 
   digitalWrite(LED0_PIN, HIGH);
   delay(100);
@@ -544,7 +564,7 @@ void loop()
   {
     // This means we have had some data come in:
     // So parse it to find id and ave
-    errorString = checkData.parseData(inputString, UNIT_ID, wind_speed_data);
+    errorString = checkData.parseData(inputString, UNIT_ID, channels);
 
     if (checkData.error_flag == true)
     {
@@ -560,45 +580,6 @@ void loop()
         returnString += baud_rates[SERIAL_BAUD];
         returnString += "#";
         checkData.baud_return_flag = false;
-      }
-      else if (checkData.vane_data_flag == true)
-      {
-        returnString = "aaWV=";
-        returnString += wind_vane_data.return_direction(analogRead(VANE_PIN)); // Print the instantaneous value of the wind vane as a direction
-
-        for (int y = 0; y < 8; y++)
-        {
-          returnString += ":";
-          returnString += (String)wind_vane_data.direction_array_values[y];
-        }
-        returnString += "#";
-        checkData.vane_data_flag = false;
-      }
-      else if (checkData.conversion_return_flag == true)
-      {
-        // Return conversion settings "aaI0STWSCONm123.4c567.89#"
-        returnString = "aaWVCONm";
-        returnString += (String)wind_speed_data.wind_speed_conv_m;
-        returnString += "c";
-        returnString += (String)wind_speed_data.wind_speed_conv_c;
-        returnString += "#";
-        checkData.conversion_return_flag = false;
-      }
-      else if (checkData.conversion_set_flag == true)
-      {
-        // Return conversion settings "aaI0STWSCONm123.4c567.89#"
-        wind_speed_data.wind_speed_conv_m = checkData.wind_speed_conv_m;
-        wind_speed_data.wind_speed_conv_c = checkData.wind_speed_conv_c;
-        // Store this data to EEPROM
-        EEPROM.put(100, wind_speed_data.wind_speed_conv_m);
-        EEPROM.put(110, wind_speed_data.wind_speed_conv_c);
-
-        returnString = "aaWVSETm";
-        returnString += (String)wind_speed_data.wind_speed_conv_m;
-        returnString += "c";
-        returnString += (String)wind_speed_data.wind_speed_conv_c;
-        returnString += "#";
-        checkData.conversion_set_flag = false;
       }
       else if (checkData.baud_set_flag == true)
       {
@@ -623,8 +604,7 @@ void loop()
         {
           //******** RETURN ALL DATA FOR AVE *************************
           DEBUGLN(DEBUG_FLAG, "Return ALL DATA");
-          returnString = "aaWSA" + (String)checkData.ave_time; // Initialise the returned string
-          returnString += "=";
+          returnString = "aaRAAA" + (String)checkData.ave_time; // Initialise the returned string
           for (int c = 0; c < 5; c++)
           {
             if (checkData.ave_time == c)
@@ -632,19 +612,39 @@ void loop()
               switch (c)
               {
                 case 0:
-                  returnString += (String)wind_speed_data.data_1s;
+                  for (int j = 0; j < NUM_CHANNELS; j++)
+                  {
+                    returnString += ":";
+                    returnString += (String)channels[j].data_1s;
+                  }
                   break;
                 case 1:
-                  returnString += (String)wind_speed_data.data_10s;
+                  for (int j = 0; j < NUM_CHANNELS; j++)
+                  {
+                    returnString += ":";
+                    returnString += (String)channels[j].data_10s;
+                  }
                   break;
                 case 2:
-                  returnString += (String)wind_speed_data.data_60s;
+                  for (int j = 0; j < NUM_CHANNELS; j++)
+                  {
+                    returnString += ":";
+                    returnString += (String)channels[j].data_60s;
+                  }
                   break;
                 case 3:
-                  returnString += (String)wind_speed_data.data_600s;
+                  for (int j = 0; j < NUM_CHANNELS; j++)
+                  {
+                    returnString += ":";
+                    returnString += (String)channels[j].data_600s;
+                  }
                   break;
                 case 4:
-                  returnString += (String)wind_speed_data.data_3600s;
+                  for (int j = 0; j < NUM_CHANNELS; j++)
+                  {
+                    returnString += ":";
+                    returnString += (String)channels[j].data_3600s;
+                  }
                   break;
               }
             }
@@ -656,9 +656,12 @@ void loop()
         {
           //******** RETURN ALL MINIMUMS *************************
           DEBUGLN(DEBUG_FLAG, "Return ALL MINIMUMS");
-          returnString = "aaWSMN"; // Initialise the returned string
-          returnString += ":";
-          returnString += (String)wind_speed_data.data_min;
+          returnString = "aaRMN"; // Initialise the returned string
+          for (int j = 0; j < NUM_CHANNELS; j++)
+          {
+            returnString += ":";
+            returnString += (String)channels[j].data_min;
+          }
           returnString += "#";
           checkData.data_min_flag = false;
         }
@@ -666,11 +669,73 @@ void loop()
         {
           //******** RETURN ALL MAXIMUMS  *************************
           DEBUGLN(DEBUG_FLAG, "Return ALL MAXIMUMS");
-          returnString = "aaWSMX"; // Initialise the returned string
-          returnString += ":";
-          returnString += (String)wind_speed_data.data_max;
+          returnString = "aaRMX"; // Initialise the returned string
+          for (int j = 0; j < NUM_CHANNELS; j++)
+          {
+            returnString += ":";
+            returnString += (String)channels[j].data_max;
+          }
           returnString += "#";
           checkData.data_max_flag = false;
+        }
+        else
+        {
+          //******** RETURN DATA FOR 1 CHANNEL *************************
+          // If we are here then we have had valid unit ID, channel ID and AVE are correct.
+          // So need to create the correct return string
+          DEBUG(DEBUG_FLAG, ("Channel: " + (String)checkData.id + " AVE is: " + (String)checkData.ave_time + " Data: "));
+          // the id must be < NUM_CHANNELS
+          // the ave_time must be within the array_averages
+          // If that i the case return the correct value.
+          if (checkData.id >= 0 && checkData.id < NUM_CHANNELS)
+          {
+            returnString = "aaR"; // Initialise the returned string
+            if (checkData.id < 10)
+            {
+              returnString = returnString + "0" + (String)checkData.id;
+            }
+            else
+            {
+              returnString = returnString + (String)checkData.id;
+            }
+            for (int c = 0; c < 5; c++)
+            {
+              if (checkData.ave_time == c)
+              {
+                uint32_t data_reply;
+                // If here then the AVE is right!!
+                switch (c)
+                {
+                  case 0:
+                    data_reply = channels[checkData.id].data_1s;
+                    break;
+                  case 1:
+                    data_reply = channels[checkData.id].data_10s;
+                    break;
+                  case 2:
+                    data_reply = channels[checkData.id].data_60s;
+                    break;
+                  case 3:
+                    data_reply = channels[checkData.id].data_600s;
+                    break;
+                  case 4:
+                    data_reply = channels[checkData.id].data_3600s;
+                    break;
+                }
+                returnString = returnString + "A" + (String)data_reply;
+                returnString = returnString + "MN" + (String)channels[checkData.id].data_min;
+                returnString = returnString + "MX" + (String)channels[checkData.id].data_max + "#";
+                DEBUGLN(DEBUG_FLAG, (String)data_reply);    // Print the 1 second data value from the checkData id
+                checkData.data_sent_flag = false;
+              }
+            }
+            if (checkData.data_sent_flag == true)
+            {
+              Serial.println(F("aaFAILAV#"));    // This needs to be returned
+              returnString = F("aaFAILAV#");
+              checkData.data_sent_flag = false;
+            }
+          }
         }
       }
       else if (checkData.data_reset_flag == true)

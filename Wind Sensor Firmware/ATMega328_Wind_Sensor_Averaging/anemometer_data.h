@@ -7,20 +7,23 @@
 class data_channel {
   public:
     int   id;
-    int16_t data_1s;
-    int16_t data_10s;
-    int16_t data_60s;
-    int16_t data_600s;
-    int16_t data_3600s;
-    int32_t data_min;     // Holds the minimum value ever recorded until reset
+    float data_1s;
+    float data_10s;
+    float data_60s;
+    float data_600s;
+    float data_3600s;
+    float data_min;     // Holds the minimum value ever recorded until reset
                           // Once read and recorded then this value is reset 
-    int32_t data_max;     // Holds the maximum value ever recorded until reset
+    float data_max;     // Holds the maximum value ever recorded until reset
                           // Once read and recorded then this value is reset 
-    int32_t data_1s_holder;
-    int32_t data_10s_holder;
-    int32_t data_60s_holder;
-    int32_t data_600s_holder;
-    int32_t data_3600s_holder;
+    float data_1s_holder;
+    float data_10s_holder;
+    float data_60s_holder;
+    float data_600s_holder;
+    float data_3600s_holder;
+
+    float wind_speed_conv_m;  // The conversion is y=mx+c, with the m and c here.
+    float wind_speed_conv_c;
     
     // This is the constructor
     data_channel() {
