@@ -13,7 +13,7 @@ The anemometer can either be a pulse output, NPN output or hall-effect output. T
 
 The unit stores average wind speeds for 1 second, 10 second, 1 min, 10 min and 1 hour values. It also records the maximum and minimum wind speed.
 
-The unit converts the pulses into a real wind speed using a y=mx+c linear conversion, where y is the wind speed and c is the number of pulses. m and c are stored in EEPROM and have default values of m=1 and c=0. These are floats and can be changed as required through the serial interface. Any updated values are stored in EEPROM.
+The unit converts the pulses into a real wind speed using a y=mx+c linear conversion, where y is the wind speed and c is the number of pulses. m and c are stored in EEPROM and have default values of m=1 and c=0. These are floats and can be changed as required through the serial interface. Any updated values are stored in EEPROM. If the pulses are zero then the output is also zero (no matter what the y=mc+c function is). This stops a reading of 'c' when the pulse data is zero.
 
 The wind vane input is analog. 
 
@@ -39,8 +39,8 @@ Both inputs for the wind vane and anemometer are buffered with an op-amp and als
 
 Anemometer Name      | Link   | Type   | m Value   | c Value
 ---------------------|----------|---------|----------|----------
-Vector Insrutments NRG #40C | https://www.nrgsystems.com/products/met-sensors/detail/40c-anemometer | Hall-effect  | |
-Maplin Anemometer (low cost) | https://www.ebay.co.uk/itm/274338314354 | Reed- switch pulse | |
+Vector Insrutments NRG #40C | https://www.nrgsystems.com/products/met-sensors/detail/40c-anemometer | Hall-effect  | 0.765 for m/s | 0.35 for m/s
+Maplin Anemometer (low cost) | https://www.ebay.co.uk/itm/274338314354 | Reed-switch pulse | 0.7 for m/s | 0 for m/s
 AliExpress Unit (low cost) PR-3000-FS-NPN| https://www.aliexpress.com/item/32798148991.html | NPN Pulse | |
 
 ## Wind Vanes Tested:
@@ -156,8 +156,4 @@ If data is not that length or does not have 'aa' and '#' at start/end then retur
 "aaFAIL4#" = Average not correct/not a number
 
 "aaFAIL5#" = Start/End chars not correct
-
-"aaFAILID#" = Channel ID not correct
-
-"aaFAILID#" = Ave Value not correct
 
