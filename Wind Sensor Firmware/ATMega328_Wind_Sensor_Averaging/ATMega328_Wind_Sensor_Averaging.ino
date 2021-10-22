@@ -63,9 +63,7 @@
     "aaFAIL3#" = Channel ID is not correct/not a number
     "aaFAIL4#" = Average not correct/not a number
     "aaFAIL5#" = Start/End chars not correct
-    "aaFAILID#" = Channel ID not correct
-    "aaFAILID#" = Ave Value not correct
-
+    
   Based on:
   http://www.arduino.cc/en/Tutorial/SerialEvent
 
