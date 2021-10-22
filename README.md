@@ -10,14 +10,23 @@ Each unit can have a unique ID (using a solder pad for 0-7 values), so multiple 
 It was designed as a relatively simple interface to remove the need for monitoring pulses and averaging them. 
 
 The anemometer can either be a pulse output, NPN output or hall-effect output. The unit reads digital pulses, with circuitry on the unit converting the hall effect output to pulses. (Note: This unit cannot read 0-5V or analog output sensors).
+
 The unit stores average wind speeds for 1 second, 10 second, 1 min, 10 min and 1 hour values. It also records the maximum and minimum wind speed.
+
 The unit converts the pulses into a real wind speed using a y=mx+c linear conversion, where y is the wind speed and c is the number of pulses. m and c are stored in EEPROM and have default values of m=1 and c=0. These are floats and can be changed as required through the serial interface. Any updated values are stored in EEPROM.
 
-The wind vane input is analog. This can read either resistive wiper vanes or stepped resistive vanes. The stepped rsistive vanes have magnet reed switches which switch in and out different resistances. The resistance then tells us the direction. A pull up reistor is required in these situations.
-The wind vane input can be 'trained'. So put the unit into vane training mode via the serial interface. This will run through N, NE, E, SE, S, SW, W, NW and you can hold the unit in the correct direction position and press the switch to store that data to memory. Once trained then the unit creates a buffer zone around each of the values and within the zone then the unit will record the correct direction.
-Wind direction is difficult to measure, as you cannot directly average the analog value (because of the 360 to 0 point where the analog value rolls around from 1024 back to 0 - this means an average of a unit pointing just off north (ie one reading of 0 and one reading of 360) will give an average of (360+0) = 180, which is south and totally wrong!). 
-This unit will record the number of seconds the vane has been pointing in a certain direction. This means a 'wind rose' can easily be created. This is stored and updated until it is directly reset. The unit will also return the instantaeous direction, if that is needed.
+The wind vane input is analog. 
 
+This can read either resistive wiper vanes or stepped resistive vanes. 
+
+The stepped rsistive vanes have magnet reed switches which switch in and out different resistances. 
+The resistance then tells us the direction. A pull up reistor is required in these situations.
+
+The wind vane input can be 'trained'. So put the unit into vane training mode via the serial interface. This will run through N, NE, E, SE, S, SW, W, NW and you can hold the unit in the correct direction position and press the switch to store that data to memory. Once trained then the unit creates a buffer zone around each of the values and within the zone then the unit will record the correct direction.
+
+Wind direction is difficult to measure, as you cannot directly average the analog value (because of the 360 to 0 point where the analog value rolls around from 1024 back to 0 - this means an average of a unit pointing just off north (ie one reading of 0 and one reading of 360) will give an average of (360+0) = 180, which is south and totally wrong!). 
+
+This unit will record the number of seconds the vane has been pointing in a certain direction. This means a 'wind rose' can easily be created. This is stored and updated until it is directly reset. The unit will also return the instantaeous direction, if that is needed.
 
 # Hardware
 
@@ -26,6 +35,10 @@ There is one reset switch, one user input switch and one LED output.
 
 Both inputs for the wind vane and anemometer are buffered with an op-amp and also have 5.1V zener protection. The anemometer input compares the input with a low voltage level to create a pulse from a hall-effect (which output a sine-wave like signal). This also works as a pull-down pulse sensor, which works with NPN and switch output anemometers.
 
+## Anemometers Tested:
+
+
+## Wind Vanes Tested:
 
 
 
