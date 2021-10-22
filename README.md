@@ -59,14 +59,18 @@ You should not need to do this, as the unit should come with this already instal
 Optiboot is used as the bootlloader:
 Need to download optiboot5a from here:
 https://code.google.com/archive/p/optiboot/downloads
+
 Install optiboot_atmega328.hex into a folder called "optiboot5a" in the hardware section
 Use this optiboot hex file for upload to the ATmega328
+
 Fuses are: Low = 0xFF, High = 0xDE, Extended = 0xFE
 
 ## Program via Arduino IDE
 
 To program it then MiniCore is used:
+
 Install MiniCore from here: https://github.com/MCUdude/MiniCore
+
 Add to preferences and then board manager.
 
 You can then upload code by choosing the "ATMega328" option with the "External 8MHz Oscillator" set.
