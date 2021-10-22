@@ -37,7 +37,7 @@ Both inputs for the wind vane and anemometer are buffered with an op-amp and als
 
 ## Anemometers Tested:
 
-Anemometer Name      |   Link   |  Type   |m Value   |  C Value
+Anemometer Name      | Link   | Type   | m Value   | c Value
 ---------------------|----------|---------|----------|----------
 Vector Insrutments NRG #40C | https://www.nrgsystems.com/products/met-sensors/detail/40c-anemometer | Hall-effect  | |
 Maplin Anemometer (low cost) | https://www.ebay.co.uk/itm/274338314354 | Reed- switch pulse | |
