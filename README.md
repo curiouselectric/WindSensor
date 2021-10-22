@@ -123,7 +123,7 @@ Mentioned at start up of unit - it is solder-programmed... cannot be changed in 
 ## Enter vane training mode:           
 Request: "aaI0VT#"
 
-Returns: Enter the vane training routine - use button to go through the different directiosn and set the values.
+Returns: Enter the vane training routine - use button to go through the different directions and set the values.
 
 The serial port will show which direction the vane should be pointing at. 
 
