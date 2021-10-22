@@ -55,39 +55,76 @@ You can then upload code by choosing the "ATMega328" option with the "External 8
 It returns the average values and information when requested on serial port.
 At all other times then the unit is asleep.
 
-Wind Speed data:                    “aaI0WSA4#”   Where 0 is an ID from 0-9 set by solder on PCB. 4 is the averaging period (0=1s, 1=10s, 2 = 60s, 3 = 600s, 4=3600s)
-                                      Returns:  "aaWSA0:3.00#"  // Where 3.00 is the data
-Wind Speed data minimum is:         “aaI0WSMN#”  - does not matter what averaging period. min/max are just the min/max seen at max data rate.
-                                      Returns: "aaWSMN:3.00#"  // Where 3.00 is the data
-Wind Speed data maximum data is:    “aaI0WSMX#”  - does not matter what averaging period. min/max are just the min/max seen at max data rate.
-                                      Returns: "aaWSMX:3.00#"  // Where 3.00 is the data
-Wind Vane data:                    “aaI0WV#”   Where 0 is an ID from 0-9 set by solder on PCB. 4 is the averaging period (0=1s, 1=10s, 2 = 60s, 3 = 600s, 4=3600s)
-                                     Returns:    The instantaneuous direction AND the direction array data
-                                     Returns:    "aaWV=W:0.00:0.00:0.00:0.00:0.00:0.00:62.00:0.00#"
-Reset the max, min and wind vane array:   "aaI0RESET#"
-                                     Returns: "aaRESET#"
+## Wind Speed data:
+Request: “aaI0WSA4#”   Where 0 is an ID from 0-9 set by solder on PCB. 4 is the averaging period (0=1s, 1=10s, 2 = 60s, 3 = 600s, 4=3600s)
 
-What is baud rate?:                 "aaI0BD#"
-                                      Returns: "aaBD9600#"  // Where 9600 is the baud rate
-Set Baud Rate:                      "aaI0STBD*#"  Where * is (0)1200, (1)2400, (2)9600, (3)57600, (4)115200
-                                      Returns: "aaBD9600#"   // Where 9600 is the baud rate
+Returns: "aaWSA0:3.00#"  // Where 3.00 is the data
+                                      
+## Wind Speed data minimum:
+Request: “aaI0WSMN#”  - does not matter what averaging period. min/max are just the min/max seen at max data rate.
 
-What is ID?:                        Mentioned at start up of unit - it is solder-programmed... cannot be changed in code.
+Returns: "aaWSMN:3.00#"  // Where 3.00 is the data
+                                      
+## Wind Speed data maximum:
+Request: “aaI0WSMX#”  - does not matter what averaging period. min/max are just the min/max seen at max data rate.
 
-Enter vane training mode:           "aaI0VT#"
-                                      Returns: Enter the vane training routine - use button to go through the different directiosn and set the values
-What is Anemometer converstion?:    "aaI0WSCON#"
-                                      Returns: "aaI0STWSCONm123.4c567.89#" (from stored values)
-Set the Anemometer conversion:      "aaI0WSSTm123.4c567.89#"   Where 123.4 is the gradient and 567.89 is the constant (y=mx+c)
-                                      Returns: "aaI0STWSSETm123.4c567.89#" (set to the new values)
+Returns: "aaWSMX:3.00#"  // Where 3.00 is the data
+                                      
+## Wind Vane data: 
+Request: “aaI0WV#”   Where 0 is an ID from 0-9 set by solder on PCB. 4 is the averaging period (0=1s, 1=10s, 2 = 60s, 3 = 600s, 4=3600s)
 
+Returns:    The instantaneuous direction AND the direction array data
+                                     
+Returns:    "aaWV=W:0.00:0.00:0.00:0.00:0.00:0.00:62.00:0.00#"
+                                     
+## Reset the max, min and wind vane array:  
+Request: "aaI0RESET#"
+
+Returns: "aaRESET#"
+                                     
+## What is baud rate?:                 
+Request: "aaI0BD#"
+
+Returns: "aaBD9600#"  // Where 9600 is the baud rate
+                                      
+## Set Baud Rate:                      
+Request: "aaI0STBD*#"  Where * is (0)1200, (1)2400, (2)9600, (3)57600, (4)115200
+
+Returns: "aaBD9600#"   // Where 9600 is the baud rate
+
+## What is ID?:                        
+Mentioned at start up of unit - it is solder-programmed... cannot be changed in code.
+
+## Enter vane training mode:           
+Request: "aaI0VT#"
+
+Returns: Enter the vane training routine - use button to go through the different directiosn and set the values
+                                      
+## What is Anemometer converstion?:    
+Request: "aaI0WSCON#"
+
+Returns: "aaI0STWSCONm123.4c567.89#" (from stored values)
+                                      
+## Set the Anemometer conversion:      
+Request: "aaI0WSSTm123.4c567.89#"   Where 123.4 is the gradient and 567.89 is the constant (y=mx+c)
+
+Returns: "aaI0STWSSETm123.4c567.89#" (set to the new values)
+
+
+## Failure codes:
 If data is not that length or does not have 'aa' and '#' at start/end then return with send "aaFAIL**#" error code
-Failure codes:
-    "aaFAIL1#" = String too long
-    "aaFAIL2#" = Unit ID not correct/not a number
-    "aaFAIL3#" = Channel ID is not correct/not a number
-    "aaFAIL4#" = Average not correct/not a number
-    "aaFAIL5#" = Start/End chars not correct
-    "aaFAILID#" = Channel ID not correct
-    "aaFAILID#" = Ave Value not correct
+
+"aaFAIL1#" = String too long
+
+"aaFAIL2#" = Unit ID not correct/not a number
+
+"aaFAIL3#" = Channel ID is not correct/not a number
+
+"aaFAIL4#" = Average not correct/not a number
+
+"aaFAIL5#" = Start/End chars not correct
+
+"aaFAILID#" = Channel ID not correct
+
+"aaFAILID#" = Ave Value not correct
 
