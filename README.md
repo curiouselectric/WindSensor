@@ -39,8 +39,8 @@ Both inputs for the wind vane and anemometer are buffered with an op-amp and als
 
 Anemometer Name      | Link   | Type   | m Value   | c Value
 ---------------------|----------|---------|----------|----------
-Vector Insrutments NRG #40C | https://www.nrgsystems.com/products/met-sensors/detail/40c-anemometer | Hall-effect  | |
-Maplin Anemometer (low cost) | https://www.ebay.co.uk/itm/274338314354 | Reed- switch pulse | |
+Vector Insrutments NRG #40C | https://www.nrgsystems.com/products/met-sensors/detail/40c-anemometer | Hall-effect  | 0.765 for m/s | 0.35 for m/s
+Maplin Anemometer (low cost) | https://www.ebay.co.uk/itm/274338314354 | Reed-switch pulse | 0.7 for m/s | 0 for m/s
 AliExpress Unit (low cost) PR-3000-FS-NPN| https://www.aliexpress.com/item/32798148991.html | NPN Pulse | |
 
 ## Wind Vanes Tested:
