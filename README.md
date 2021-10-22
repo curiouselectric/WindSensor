@@ -157,7 +157,3 @@ If data is not that length or does not have 'aa' and '#' at start/end then retur
 
 "aaFAIL5#" = Start/End chars not correct
 
-"aaFAILID#" = Channel ID not correct
-
-"aaFAILID#" = Ave Value not correct
-
