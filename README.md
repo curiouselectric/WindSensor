@@ -41,7 +41,7 @@ Anemometer Name      | Link   | Type   | m Value   | c Value
 ---------------------|----------|---------|----------|----------
 Vector Insrutments NRG #40C | https://www.nrgsystems.com/products/met-sensors/detail/40c-anemometer | Hall-effect  | |
 Maplin Anemometer (low cost) | https://www.ebay.co.uk/itm/274338314354 | Reed- switch pulse | |
-AliExpress Unit (low cost) | https://www.aliexpress.com/item/32798148991.html | NPN Pulse | |
+AliExpress Unit (low cost) PR-3000-FS-NPN| https://www.aliexpress.com/item/32798148991.html | NPN Pulse | |
 
 ## Wind Vanes Tested:
 
