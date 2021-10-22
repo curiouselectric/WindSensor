@@ -1,9 +1,9 @@
-# WindSensor
+# WindSensor Overview
 A DIY Wind sensor interface board.
 
 This connects to various anemometers and wind vanes and provides a serial interface for averaged data from the pulses.
 
-It runs on an ATTiny85 with selectable baud serial.
+It runs on an ATMega328 running at 8MHz with selectable baud serial (up to 57600). It comes pre-programmed, but code can be uploaded via the Arduino IDE, using the MiniCore board add-on. See firmware for more details.
 
 Each unit can have a unique ID (using a solder pad for 0-7 values), so multiple units can be added to a serial bus, if needed. The defalt is 0.
 
@@ -14,14 +14,21 @@ The unit stores average wind speeds for 1 second, 10 second, 1 min, 10 min and 1
 The unit converts the pulses into a real wind speed using a y=mx+c linear conversion, where y is the wind speed and c is the number of pulses. m and c are stored in EEPROM and have default values of m=1 and c=0. These are floats and can be changed as required through the serial interface. Any updated values are stored in EEPROM.
 
 The wind vane input is analog. This can read either resistive wiper vanes or stepped resistive vanes. The stepped rsistive vanes have magnet reed switches which switch in and out different resistances. The resistance then tells us the direction. A pull up reistor is required in these situations.
-The wind vane input can be 'trained'. So put the unit into vane training mode via the serial interface. This will run through N, NE, E, SE, S, SW, W, NW and you can hold the unit in the correct direction position and press the switch to store that data to memory. Each of the 8 
+The wind vane input can be 'trained'. So put the unit into vane training mode via the serial interface. This will run through N, NE, E, SE, S, SW, W, NW and you can hold the unit in the correct direction position and press the switch to store that data to memory. Once trained then the unit creates a buffer zone around each of the values and within the zone then the unit will record the correct direction.
+Wind direction is difficult to measure, as you cannot directly average the analog value (because of the 360 to 0 point where the analog value rolls around from 1024 back to 0 - this means an average of a unit pointing just off north (ie one reading of 0 and one reading of 360) will give an average of (360+0) = 180, which is south and totally wrong!). 
+This unit will record the number of seconds the vane has been pointing in a certain direction. This means a 'wind rose' can easily be created. This is stored and updated until it is directly reset. The unit will also return the instantaeous direction, if that is needed.
 
 
-  Wind Sensor Averaging firmware for ATMega328
-   by:    Matt Little
-   date:  22/8/2021
-   w:     www.curiouselectric.co.uk
-   e:     hello@curiouselectric.co.uk
+# Hardware
+
+The PCB was designed in KiCAD and is available here. A small PCB has been designed.
+There is one reset switch, one user input switch and one LED output.
+
+Both inputs for the wind vane and anemometer are buffered with an op-amp and also have 5.1V zener protection. The anemometer input compares the input with a low voltage level to create a pulse from a hall-effect 
+
+
+
+# Firmware
 
    This code is for an ATMega328 unit solar sensor unit.
    This uses an ATMega328 running at 8MHz with 3.3v or 5V supply.
