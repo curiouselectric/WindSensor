@@ -61,12 +61,12 @@ Request: “aaI0WSA4#”   Where 0 is an ID from 0-9 set by solder on PCB. 4 is 
 Returns: "aaWSA0:3.00#"  // Where 3.00 is the data
                                       
 ## Wind Speed data minimum:
-Request: “aaI0WSMN#”  - does not matter what averaging period. min/max are just the min/max seen at max data rate.
+Request: “aaI0WSMN#”  - does not matter what averaging period. min/max are just the min/max seen.
 
 Returns: "aaWSMN:3.00#"  // Where 3.00 is the data
                                       
 ## Wind Speed data maximum:
-Request: “aaI0WSMX#”  - does not matter what averaging period. min/max are just the min/max seen at max data rate.
+Request: “aaI0WSMX#”  - does not matter what averaging period. min/max are just the min/max seen.
 
 Returns: "aaWSMX:3.00#"  // Where 3.00 is the data
                                       
@@ -98,7 +98,15 @@ Mentioned at start up of unit - it is solder-programmed... cannot be changed in 
 ## Enter vane training mode:           
 Request: "aaI0VT#"
 
-Returns: Enter the vane training routine - use button to go through the different directiosn and set the values
+Returns: Enter the vane training routine - use button to go through the different directiosn and set the values.
+
+The serial port will show which direction the vane should be pointing at. 
+
+Move the vane to this position and press the user switch (for around 0.5 seconds).
+
+The serial port will show then next direction and will got N, NE, E, SE, S, SW, W, NW and then end.
+
+When it ends this data is stored within the unit and the direction 'bands' are recaluclated.
                                       
 ## What is Anemometer converstion?:    
 Request: "aaI0WSCON#"
