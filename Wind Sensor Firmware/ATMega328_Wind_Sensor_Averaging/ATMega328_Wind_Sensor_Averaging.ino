@@ -203,7 +203,15 @@ void t1SCallback() {
     // ******** Convert pulses into the wind speed here **********
 
     // wind_speed_data.data_1s - convert as a y=mx+c
-    wind_speed_data.data_1s = (wind_speed_data.data_1s * wind_speed_data.wind_speed_conv_m) + wind_speed_data.wind_speed_conv_c;
+    if(wind_speed_data.data_1s > 0)
+    {
+      wind_speed_data.data_1s = (wind_speed_data.data_1s * wind_speed_data.wind_speed_conv_m) + wind_speed_data.wind_speed_conv_c;
+    }
+    else
+    {
+      wind_speed_data.data_1s = 0;    // This stops the unit outputting 'c' when there are no pulses
+                                      // no pulses is assumed to be zero wind speed (we cannot infer anything else)
+    }
 
     // ***********************************************************
     // Here we set the max and min for the anemometer data
@@ -677,6 +685,8 @@ void loop()
       {
         // Want to reset the wind vane direction data as previous will be wrong!
         wind_vane_data.reset_vane_direction_array();
+        wind_speed_data.data_min = 999999;
+        wind_speed_data.data_max = 0;
         returnString = F("aaRESET#");   // This needs to be returned
         checkData.data_reset_flag = false;
         checkData.data_sent_flag = false;
