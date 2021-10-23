@@ -6,6 +6,8 @@ This connects to various anemometers and wind vanes and provides a serial interf
 The problem with measuring wind anemometers and wind vane is that they constantly need to be checked. You need to know at all times when puklses have come in and which direction the wind vane is facing. This requires a bit of microcontroller time and processing. This unit is designed to solve that.
 Wire up your vane and anemometer. Power the unit up. Then it will save the averaged data for you. You can then get hold of the data through serial requests and process as you need.
 
+![Overview](https://github.com/curiouselectric/WindSensor/blob/main/Wind%20Sensor%20Instructions/Images/wind%20sensor%20overview.png?raw=true)
+
 I wrote this to interface to an ESP32 data logger, which sleeps most of the time. It wakes up, talks to the wind sensor, gets the data it needs, then goes back to sleep, knowing the wind sensor is always monitoring.
 
 It runs on an ATMega328 running at 8MHz with selectable baud serial (up to 57600). It comes pre-programmed, but code can be uploaded via the Arduino IDE, using the MiniCore board add-on. See firmware for more details.
@@ -164,4 +166,4 @@ If data is not that length or does not have 'aa' and '#' at start/end then retur
 
 # Overview of Connections
 
-![My Image](https://github.com/curiouselectric/WindSensor/blob/main/Wind%20Sensor%20Instructions/Images/Wiring_overview.png?raw=true)
+![Connections](https://github.com/curiouselectric/WindSensor/blob/main/Wind%20Sensor%20Instructions/Images/Wiring_overview.png?raw=true)
