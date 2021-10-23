@@ -127,6 +127,21 @@ Returns: "aaBD9600#"   // Where 9600 is the baud rate
 ## What is ID?:                        
 Mentioned at start up of unit - it is solder-programmed... cannot be changed in code.
 
+ID selection is by using a blob of solder to connect together some pads labelled A0, A1 and A2. The default is for no pads to be soldered and the ID is 0. This means the unit will respond to "I0" as the ID.
+
+To change the ID to another number from 0-7 then we can solder the different connection pads to create a binay number. The connections are:
+
+A0     |A1     |A2     | ID
+-------|-------|-------|----
+NC     |NC     |NC     | 0
+Solder |NC     |NC     | 1
+NC     |Solder |NC     | 2
+Solder |Solder |NC     | 3
+NC     |NC     |Solder | 4
+Solder |NC     |Solder | 5
+NC     |Solder |Solder | 6
+Solder |Solder |Solder | 7
+
 ## Enter vane training mode:           
 Request: "aaI0VT#"
 
