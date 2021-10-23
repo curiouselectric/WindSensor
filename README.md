@@ -162,3 +162,6 @@ If data is not that length or does not have 'aa' and '#' at start/end then retur
 
 "aaFAIL5#" = Start/End chars not correct
 
+# Overview of Connections
+
+[My Image] (https://github.com/curiouselectric/WindSensor/blob/main/Wind%20Sensor%20Instructions/Images/Wiring_overview.png?raw=true)
