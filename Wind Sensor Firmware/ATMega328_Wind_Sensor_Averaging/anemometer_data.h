@@ -24,6 +24,10 @@ class data_channel {
 
     float wind_speed_conv_m;  // The conversion is y=mx+c, with the m and c here.
     float wind_speed_conv_c;
+
+    int send_wind_speed_data = 5;   // This int sets if the wind speed data will be sent each time. If = 5 then no data sent,
+                                    // if = 0 then 1s, = 1 then 10s = 2 then 60s if =3 then 600s if = 4 then 3600s
+                                    // This is updated in EEPROM when set
     
     // This is the constructor
     data_channel() {

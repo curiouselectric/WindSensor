@@ -6,6 +6,8 @@
 #define LED0_PIN          7 
 #define SWA_PIN           8
 
+#define HC12_PWR_PIN      7     // This is a power output for the HC12 unit - set to LED0 at present
+
 #define FREQ_PIN          2
 #define VANE_PIN          A3
 

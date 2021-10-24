@@ -24,6 +24,7 @@ class check_data {
     bool vane_data_flag;
     bool conversion_return_flag;
     bool conversion_set_flag;
+    bool send_wind_data_flag;
 
     float wind_speed_conv_m;
     float wind_speed_conv_c;   

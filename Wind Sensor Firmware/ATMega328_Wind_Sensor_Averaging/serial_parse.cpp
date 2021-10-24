@@ -50,6 +50,16 @@ String check_data::parseData(String _inputString, byte _UNIT_ID, data_channel _l
             EEPROM.write(4, baud_id);
             baud_set_flag = true;
           }
+          else if (_inputString.charAt(4) == 'S' && _inputString.charAt(5) == 'E' && _inputString.charAt(6) == 'N' && _inputString.charAt(7) == 'D')
+          {
+            // if we ask for "aaI0SEND?#" then it will start sending regular serial data
+            int send_id = (_inputString.substring(8, 9)).toInt();
+            if (send_id >= 0 && send_id < 6)
+            {
+              EEPROM.write(120, send_id);
+              send_wind_data_flag = true;
+            }
+          }
           else if (_inputString.charAt(4) == 'W' && _inputString.charAt(5) == 'S' && _inputString.charAt(6) == 'C' && _inputString.charAt(7) == 'O' && _inputString.charAt(8) == 'N')
           {
             // If we ask for "aaI0WVCON#" then it will return the wind vane conversion data
@@ -63,7 +73,7 @@ String check_data::parseData(String _inputString, byte _UNIT_ID, data_channel _l
             String data_substring;
             int start_index;
             int end_index;
-            
+
             start_index = _inputString.indexOf('m');
             end_index = _inputString.indexOf('c', start_index + 1);
             data_substring = _inputString.substring(start_index + 1, end_index);
@@ -71,9 +81,9 @@ String check_data::parseData(String _inputString, byte _UNIT_ID, data_channel _l
             start_index = end_index;
             end_index = _inputString.indexOf('#', start_index + 1);
             data_substring = _inputString.substring(start_index + 1, end_index);
-            wind_speed_conv_c = data_substring.toFloat();   
+            wind_speed_conv_c = data_substring.toFloat();
             conversion_set_flag = true;
-            
+
           }
           else if (_inputString.charAt(4) == 'W' && _inputString.charAt(5) == 'S' && _inputString.charAt(6) == 'M' && _inputString.charAt(7) == 'N')
           {

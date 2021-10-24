@@ -56,6 +56,9 @@
   Set the Anemometer conversion:      "aaI0WSSTm123.4c567.89#"   Where 123.4 is the gradient and 567.89 is the constant (y=mx+c)
                                       Returns: "aaI0STWSSETm123.4c567.89#" (set to the new values)
 
+  Send regular data (for a remote unit):  "aaI0SEND?#" Where ? is an int 0-5. If = 5 => then dont send, 0 =>  1s send, 1 => 10s send, 2 => 60s send, 3 => 600s send, 4 => 3600 send
+                                      Returns: "aaI0OK#" if the number is correct, othewise it will send a fail.
+
   If data is not that length or does not have 'aa' and '#' at start/end then return with send "aaFAIL**#" error code
   Failure codes:
     "aaFAIL1#" = String too long
@@ -63,7 +66,7 @@
     "aaFAIL3#" = Channel ID is not correct/not a number
     "aaFAIL4#" = Average not correct/not a number
     "aaFAIL5#" = Start/End chars not correct
-    
+
   Based on:
   http://www.arduino.cc/en/Tutorial/SerialEvent
 
@@ -201,14 +204,14 @@ void t1SCallback() {
     // ******** Convert pulses into the wind speed here **********
 
     // wind_speed_data.data_1s - convert as a y=mx+c
-    if(wind_speed_data.data_1s > 0)
+    if (wind_speed_data.data_1s > 0)
     {
       wind_speed_data.data_1s = (wind_speed_data.data_1s * wind_speed_data.wind_speed_conv_m) + wind_speed_data.wind_speed_conv_c;
     }
     else
     {
       wind_speed_data.data_1s = 0;    // This stops the unit outputting 'c' when there are no pulses
-                                      // no pulses is assumed to be zero wind speed (we cannot infer anything else)
+      // no pulses is assumed to be zero wind speed (we cannot infer anything else)
     }
 
     // ***********************************************************
@@ -269,7 +272,34 @@ void t1SCallback() {
       // Want to convert the number 0-7 into direction N-NW)
       Serial.print(wind_vane_data.vane_directions[vane_training_direction]);
       Serial.print(F("\tValue: \t"));
-      Serial.println((String)wind_speed_data.data_1s); // Print the 1 second data for the wind vane
+      Serial.println(analogRead(VANE_PIN)); // Print the 1 second data for the wind vane
+    }
+
+    // Here we want to check if we are regularly sending the data and send if needed:
+    if (wind_speed_data.send_wind_speed_data == 0 && checkData.vane_training_mode == false)
+    {
+      // Send 1 second data
+      digitalWrite(HC12_PWR_PIN, HIGH);
+      delay(100);  // short settling delay
+      returnString = "aaI";
+      returnString += (String)UNIT_ID;
+      returnString += "WSA0=";
+      returnString += (String)wind_speed_data.data_1s;
+      returnString += "#";
+      Serial.println(returnString);
+      returnString = "aaI";
+      returnString += (String)UNIT_ID;
+      returnString += "WV=";
+      returnString += wind_vane_data.return_direction(analogRead(VANE_PIN)); // Print the instantaneous value of the wind vane as a direction
+      for (int y = 0; y < 8; y++)
+      {
+        returnString += ":";
+        returnString += (String)wind_vane_data.direction_array_values[y];
+      }
+      returnString += "#";
+      Serial.println(returnString);
+      delay(100);  // short settling delay
+      digitalWrite(HC12_PWR_PIN, LOW);
     }
 
     // Every second we recheck the bits of the UNIT_ID
@@ -301,6 +331,33 @@ void t10SCallback() {
       Serial.print(F(" N: "));
       Serial.println(data_counter_10s);
     }
+
+    // Here we want to check if we are regularly sending the data and send if needed:
+    if (wind_speed_data.send_wind_speed_data == 1 && checkData.vane_training_mode == false)
+    {
+      // Send 10 second data
+      digitalWrite(HC12_PWR_PIN, HIGH);
+      delay(100);  // short settling delay
+      returnString = "aaI";
+      returnString += (String)UNIT_ID;
+      returnString += "WSA1=";
+      returnString += (String)wind_speed_data.data_10s;
+      returnString += "#";
+      Serial.println(returnString);
+      returnString = "aaI";
+      returnString += (String)UNIT_ID;
+      returnString += "WV=";
+      returnString += wind_vane_data.return_direction(analogRead(VANE_PIN)); // Print the instantaneous value of the wind vane as a direction
+      for (int y = 0; y < 8; y++)
+      {
+        returnString += ":";
+        returnString += (String)wind_vane_data.direction_array_values[y];
+      }
+      returnString += "#";
+      Serial.println(returnString);
+      delay(100);  // short settling delay
+      digitalWrite(HC12_PWR_PIN, LOW);
+    }
     data_counter_60s++;
     data_counter_10s = 0;
   }
@@ -324,6 +381,33 @@ void t60SCallback() {
       Serial.print(F(" N: "));
       Serial.println(data_counter_60s);
     }
+    // Here we want to check if we are regularly sending the data and send if needed:
+    if (wind_speed_data.send_wind_speed_data == 2 && checkData.vane_training_mode == false)
+    {
+      // Send 60 second data
+      digitalWrite(HC12_PWR_PIN, HIGH);
+      delay(100);  // short settling delay
+      returnString = "aaI";
+      returnString += (String)UNIT_ID;
+      returnString += "WSA2=";
+      returnString += (String)wind_speed_data.data_60s;
+      returnString += "#";
+      Serial.println(returnString);
+      returnString = "aaI";
+      returnString += (String)UNIT_ID;
+      returnString += "WV=";
+      returnString += wind_vane_data.return_direction(analogRead(VANE_PIN)); // Print the instantaneous value of the wind vane as a direction
+      for (int y = 0; y < 8; y++)
+      {
+        returnString += ":";
+        returnString += (String)wind_vane_data.direction_array_values[y];
+      }
+      returnString += "#";
+      Serial.println(returnString);
+      delay(100);  // short settling delay
+      digitalWrite(HC12_PWR_PIN, LOW);
+    }
+
     data_counter_600s++;
     data_counter_60s = 0;
   }
@@ -347,6 +431,33 @@ void t600SCallback() {
       Serial.print(F(" N: "));
       Serial.println(data_counter_600s);
     }
+    // Here we want to check if we are regularly sending the data and send if needed:
+    if (wind_speed_data.send_wind_speed_data == 3 && checkData.vane_training_mode == false)
+    {
+      // Send 600 second data
+      digitalWrite(HC12_PWR_PIN, HIGH);
+      delay(100);  // short settling delay
+      returnString = "aaI";
+      returnString += (String)UNIT_ID;
+      returnString += "WSA3=";
+      returnString += (String)wind_speed_data.data_600s;
+      returnString += "#";
+      Serial.println(returnString);
+      returnString = "aaI";
+      returnString += (String)UNIT_ID;
+      returnString += "WV=";
+      returnString += wind_vane_data.return_direction(analogRead(VANE_PIN)); // Print the instantaneous value of the wind vane as a direction
+      for (int y = 0; y < 8; y++)
+      {
+        returnString += ":";
+        returnString += (String)wind_vane_data.direction_array_values[y];
+      }
+      returnString += "#";
+      Serial.println(returnString);
+      delay(100);  // short settling delay
+      digitalWrite(HC12_PWR_PIN, LOW);
+    }
+
   }
   data_counter_3600s++;
   data_counter_600s = 0;
@@ -369,6 +480,32 @@ void t3600SCallback() {
       Serial.print(F("\t : \t"));
       Serial.print(F(" N: "));
       Serial.println(data_counter_3600s);
+    }
+    // Here we want to check if we are regularly sending the data and send if needed:
+    if (wind_speed_data.send_wind_speed_data == 4 && checkData.vane_training_mode == false)
+    {
+      // Send 3600 second data
+      digitalWrite(HC12_PWR_PIN, LOW);
+      delay(100);  // short settling delay
+      returnString = "aaI";
+      returnString += (String)UNIT_ID;
+      returnString += "WSA4=";
+      returnString += (String)wind_speed_data.data_3600s;
+      returnString += "#";
+      Serial.println(returnString);
+      returnString = "aaI";
+      returnString += (String)UNIT_ID;
+      returnString += "WV=";
+      returnString += wind_vane_data.return_direction(analogRead(VANE_PIN)); // Print the instantaneous value of the wind vane as a direction
+      for (int y = 0; y < 8; y++)
+      {
+        returnString += ":";
+        returnString += (String)wind_vane_data.direction_array_values[y];
+      }
+      returnString += "#";
+      Serial.println(returnString);
+      delay(100);  // short settling delay
+      digitalWrite(HC12_PWR_PIN, HIGH);
     }
   }
   data_counter_3600s = 0;
@@ -469,6 +606,10 @@ void setup() {
   EEPROM.get(100, wind_speed_data.wind_speed_conv_m);
   EEPROM.get(110, wind_speed_data.wind_speed_conv_c);
 
+  // Get the control int for sending data to serial port
+  // This is for constant output data
+  wind_speed_data.send_wind_speed_data = EEPROM.read(120);
+
   // Read in the digital pins to check the Unit ID
   // This reads in three digital pins to set the Unit ID
   // UNIT_ID is a 8 bit byte
@@ -480,6 +621,7 @@ void setup() {
   bitWrite(UNIT_ID, 0, !digitalRead(GPIO_ID0));
   bitWrite(UNIT_ID, 1, !digitalRead(GPIO_ID1));
   bitWrite(UNIT_ID, 2, !digitalRead(GPIO_ID2));
+
   // This is re-checked every second or after reset
   if (DEBUG_FLAG == true)
   {
@@ -495,6 +637,9 @@ void setup() {
   digitalWrite(LED0_PIN, HIGH);
   delay(100);
   digitalWrite(LED0_PIN, LOW);
+  // Set up the HC12 power output
+  pinMode(HC12_PWR_PIN, OUTPUT);
+  digitalWrite(HC12_PWR_PIN, LOW);
 
   wind_vane_data.read_direction_array();  // Gets data from EEPROM
   wind_vane_data.find_lower_bands(DEBUG_FLAG);
@@ -562,14 +707,19 @@ void loop()
       if (checkData.baud_return_flag == true)
       {
         // Here we return the baud rate
-        returnString = "aaBD";
+        returnString = "aaI";
+        returnString += (String)UNIT_ID;
+        returnString += "BD";
         returnString += baud_rates[SERIAL_BAUD];
         returnString += "#";
         checkData.baud_return_flag = false;
+        checkData.data_sent_flag = false;
       }
       else if (checkData.vane_data_flag == true)
       {
-        returnString = "aaWV=";
+        returnString = "aaI";
+        returnString += (String)UNIT_ID;
+        returnString += "WV=";
         returnString += wind_vane_data.return_direction(analogRead(VANE_PIN)); // Print the instantaneous value of the wind vane as a direction
 
         for (int y = 0; y < 8; y++)
@@ -579,16 +729,20 @@ void loop()
         }
         returnString += "#";
         checkData.vane_data_flag = false;
+        checkData.data_sent_flag = false;
       }
       else if (checkData.conversion_return_flag == true)
       {
         // Return conversion settings "aaI0STWSCONm123.4c567.89#"
-        returnString = "aaWVCONm";
+        returnString = "aaI";
+        returnString += (String)UNIT_ID;
+        returnString += "WVCONm";
         returnString += (String)wind_speed_data.wind_speed_conv_m;
         returnString += "c";
         returnString += (String)wind_speed_data.wind_speed_conv_c;
         returnString += "#";
         checkData.conversion_return_flag = false;
+        checkData.data_sent_flag = false;
       }
       else if (checkData.conversion_set_flag == true)
       {
@@ -598,19 +752,23 @@ void loop()
         // Store this data to EEPROM
         EEPROM.put(100, wind_speed_data.wind_speed_conv_m);
         EEPROM.put(110, wind_speed_data.wind_speed_conv_c);
-
-        returnString = "aaWVSETm";
+        returnString = "aaI";
+        returnString += (String)UNIT_ID;
+        returnString += "WVSETm";
         returnString += (String)wind_speed_data.wind_speed_conv_m;
         returnString += "c";
         returnString += (String)wind_speed_data.wind_speed_conv_c;
         returnString += "#";
         checkData.conversion_set_flag = false;
+        checkData.data_sent_flag = false;
       }
       else if (checkData.baud_set_flag == true)
       {
         Serial.end();
         // Here we set the baud rate to a new value and store in EEPROM
-        returnString = "aaSTBD";
+        returnString = "aaI";
+        returnString += (String)UNIT_ID;
+        returnString += "STBD";
         // Read the serial baud rate set in EEPROM
         SERIAL_BAUD = EEPROM.read(10);
         if (SERIAL_BAUD >= MAX_BAUD_RATES)
@@ -622,6 +780,7 @@ void loop()
         returnString += baud_rates[SERIAL_BAUD];
         returnString += "#";
         checkData.baud_set_flag = false;
+        checkData.data_sent_flag = false;
       }
       else if (checkData.data_sent_flag == true)
       {
@@ -629,7 +788,9 @@ void loop()
         {
           //******** RETURN ALL DATA FOR AVE *************************
           DEBUGLN(DEBUG_FLAG, "Return ALL DATA");
-          returnString = "aaWSA" + (String)checkData.ave_time; // Initialise the returned string
+          returnString = "aaI";
+          returnString += (String)UNIT_ID;
+          returnString += "WSA" + (String)checkData.ave_time; // Initialise the returned string
           returnString += "=";
           for (int c = 0; c < 5; c++)
           {
@@ -657,26 +818,33 @@ void loop()
           }
           returnString += "#";
           checkData.data_all_flag = false;
+          checkData.data_sent_flag = false;
         }
         else if (checkData.data_min_flag == true)
         {
           //******** RETURN ALL MINIMUMS *************************
           DEBUGLN(DEBUG_FLAG, "Return ALL MINIMUMS");
-          returnString = "aaWSMN"; // Initialise the returned string
+          returnString = "aaI";
+          returnString += (String)UNIT_ID;
+          returnString += "WSMN"; // Initialise the returned string
           returnString += ":";
           returnString += (String)wind_speed_data.data_min;
           returnString += "#";
           checkData.data_min_flag = false;
+          checkData.data_sent_flag = false;
         }
         else if (checkData.data_max_flag == true)
         {
           //******** RETURN ALL MAXIMUMS  *************************
           DEBUGLN(DEBUG_FLAG, "Return ALL MAXIMUMS");
-          returnString = "aaWSMX"; // Initialise the returned string
+          returnString = "aaI";
+          returnString += (String)UNIT_ID;
+          returnString += "WSMX"; // Initialise the returned string
           returnString += ":";
           returnString += (String)wind_speed_data.data_max;
           returnString += "#";
           checkData.data_max_flag = false;
+          checkData.data_sent_flag = false;
         }
       }
       else if (checkData.data_reset_flag == true)
@@ -689,9 +857,17 @@ void loop()
         checkData.data_reset_flag = false;
         checkData.data_sent_flag = false;
       }
+      else if (checkData.send_wind_data_flag == true)
+      {
+        // In this case we start to send data at regular intervals.
+        wind_speed_data.send_wind_speed_data = EEPROM.read(120);
+        returnString = F("aaSENDOK#");   // This needs to be returned
+        checkData.send_wind_data_flag = false;
+        checkData.data_sent_flag = false;
+      }
       else
       {
-        Serial.println(F("aaFAILID#"));    // This needs to be returned
+        // Serial.println(F("aaFAILID#"));    // This needs to be returned
         returnString = F("aaFAILID#");
         checkData.data_sent_flag = false;
       }
