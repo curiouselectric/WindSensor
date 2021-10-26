@@ -239,8 +239,8 @@ void t1SCallback() {
       wind_vane_data.direction_array[y] = 0;
     }
 
-    // Here we decide if we are shound the data to the serial port or not:
-    if (DEBUG_DATA_1S == true || display_1s_data == true)
+    // Here we decide if we are shound the data to the serial port or not. Just for debugging:
+    if (DEBUG_DATA_1S == true)
     {
       Serial.print(F("1s: "));
       Serial.print((String)wind_speed_data.data_1s); // Print the 1 second data for the wind speed
@@ -554,17 +554,27 @@ void tap(Button2 & btn)
     }
     else
     {
-      // If SWA pressed then toggle the 'display 1s data' flag
-      display_1s_data = !display_1s_data;
-      // Set LED0 to whatever the display data flag is:
-      digitalWrite(LED0_PIN, display_1s_data);
-      if (DEBUG_FLAG == true && display_1s_data == true)
+      // If SWA pressed then increment the "send_wind_speed_data" from 0-1-2-3-4-5 and back to 0.
+      // This means data will be shown at 1s/10s/60s/600s/3600s timescales.
+
+      // In this case we start to send data at regular intervals.
+      wind_speed_data.send_wind_speed_data++;
+      if (wind_speed_data.send_wind_speed_data >= 6)
       {
-        Serial.println(F("Displaying 1s data"));
+        wind_speed_data.send_wind_speed_data = 0;
       }
-      else if (DEBUG_FLAG == true && display_1s_data == false)
+      EEPROM.write(120, wind_speed_data.send_wind_speed_data);  // Update the EEPROM
+      Serial.print(F("aaSEND"));
+      Serial.print(wind_speed_data.send_wind_speed_data);
+      Serial.println("#");
+
+      // Also want to flash the LED to show what send mode the unit is in:
+      for(int i=0;i<wind_speed_data.send_wind_speed_data;i++)
       {
-        Serial.println(F("Not displaying data"));
+        digitalWrite(LED0_PIN, true);
+        delay(250);
+        digitalWrite(LED0_PIN, false);
+        delay(250);        
       }
     }
   }
