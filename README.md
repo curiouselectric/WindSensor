@@ -10,7 +10,7 @@ Wire up your vane and anemometer. Power the unit up. Then it will save the avera
 
 I wrote this to interface to an ESP32 data logger, which sleeps most of the time. It wakes up, talks to the wind sensor, gets the data it needs, then goes back to sleep, knowing the wind sensor is always monitoring.
 
-There are two mode of operation, depending upon your use case
+There are two mode of operation, depending upon your use case:
 
 ## Response Mode
 
@@ -24,8 +24,10 @@ In this mode then the unit regularly sends data via the serial connunication. It
 
 ![Broadcast](https://github.com/curiouselectric/WindSensor/blob/main/Wind%20Sensor%20Instructions/Images/wind%20sensor%20broadcast.png?raw=true)
 
-The two modes work together - you can have the unit sending regular data and also responding to requests.
+Boradcast mode works well if the logger is always listening and you only have one sensor in range. If more than one sensor is in range then the data will clash and potentially cause issues, in which case use Response mode.
 
+
+The two modes work together - you can have the unit sending regular data and also responding to requests.
 
 It runs on an ATMega328 running at 8MHz with selectable baud serial (up to 57600). It comes pre-programmed, but code can be uploaded via the Arduino IDE, using the MiniCore board add-on. See firmware for more details.
 
@@ -189,8 +191,6 @@ The serial port will show then next direction and will got N, NE, E, SE, S, SW, 
 
 When it ends this data is stored within the unit and the direction 'bands' are recaluclated.
                                       
-
-
 
 ## Failure codes:
 If data is not that length or does not have 'aa' and '#' at start/end then return with send "aaFAIL**#" error code
