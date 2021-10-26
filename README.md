@@ -10,22 +10,24 @@ Wire up your vane and anemometer. Power the unit up. Then it will save the avera
 
 I wrote this to interface to an ESP32 data logger, which sleeps most of the time. It wakes up, talks to the wind sensor, gets the data it needs, then goes back to sleep, knowing the wind sensor is always monitoring.
 
-There are two mode of operation, depending upon your use case
+There are two mode of operation, depending upon your use case:
 
 ## Response Mode
 
 In this mode then the unit responds to serial requests made. You ask the sensor for data and this is returned. It never sends anything unless asked. 
 
-![Overview](https://github.com/curiouselectric/WindSensor/blob/main/Wind%20Sensor%20Instructions/Images/wind%20sensor%20overview.png?raw=true)
+![Response](https://github.com/curiouselectric/WindSensor/blob/main/Wind%20Sensor%20Instructions/Images/wind%20sensor%20response.png?raw=true)
 
 ## Broadcast Mode
 
 In this mode then the unit regularly sends data via the serial connunication. It will send the averaged data for (0) 1 second, (1) 10 second, (2) 1 min, (3) 10 min and (4) 1 hour averaged data. If this is set to (5) then the unit does not send any data. The send mdoe is stored in EEPROM, so it will start sending data again even if power is lost.
 
-![Overview](https://github.com/curiouselectric/WindSensor/blob/main/Wind%20Sensor%20Instructions/Images/wind%20sensor%20overview.png?raw=true)
+![Broadcast](https://github.com/curiouselectric/WindSensor/blob/main/Wind%20Sensor%20Instructions/Images/wind%20sensor%20broadcast.png?raw=true)
+
+Boradcast mode works well if the logger is always listening and you only have one sensor in range. If more than one sensor is in range then the data will clash and potentially cause issues, in which case use Response mode.
+
 
 The two modes work together - you can have the unit sending regular data and also responding to requests.
-
 
 It runs on an ATMega328 running at 8MHz with selectable baud serial (up to 57600). It comes pre-programmed, but code can be uploaded via the Arduino IDE, using the MiniCore board add-on. See firmware for more details.
 
@@ -118,6 +120,16 @@ Returns: "aaWSMN:3.00#"  // Where 3.00 is the data
 Request: “aaI0WSMX#”  - does not matter what averaging period. min/max are just the min/max seen.
 
 Returns: "aaWSMX:3.00#"  // Where 3.00 is the data
+
+## What is Anemometer conversion?:    
+Request: "aaI0WSCON#"
+
+Returns: "aaI0STWSCONm123.4c567.89#" (from stored values)
+                                      
+## Set the Anemometer conversion:      
+Request: "aaI0WSSTm123.4c567.89#"   Where 123.4 is the gradient and 567.89 is the constant (y=mx+c)
+
+Returns: "aaI0STWSSETm123.4c567.89#" (set to the new values)
                                       
 ## Wind Vane data: 
 Request: “aaI0WV#”   Where 0 is an ID from 0-9 set by solder on PCB. 4 is the averaging period (0=1s, 1=10s, 2 = 60s, 3 = 600s, 4=3600s)
@@ -130,7 +142,14 @@ Returns:    "aaWV=W:0.00:0.00:0.00:0.00:0.00:0.00:62.00:0.00#"
 Request: "aaI0RESET#"
 
 Returns: "aaRESET#"
-                                     
+
+## Set the unit to broadcast:  
+Request: "aaI0SEND?#" where ? is an int (0)= 1s data, (1)= 10s data, (2)= 60s/1 min data, (3)= 600s/10 min data, (4)= 3600s/1hr data, (5)= NO data
+
+Returns: "aaI0SENDOK#"
+
+You can also set the unit to broadcast using the user switch. Press the button for around 0.5s or more then release. This will go through the boradcast modes from 0-1-2-3-4-5 then back round to 0. The LED will flash the number of times for the setting (so send = 0 the unit will not flash, but data will appear within 1 second!).
+
 ## What is baud rate?:                 
 Request: "aaI0BD#"
 
@@ -172,16 +191,6 @@ The serial port will show then next direction and will got N, NE, E, SE, S, SW, 
 
 When it ends this data is stored within the unit and the direction 'bands' are recaluclated.
                                       
-## What is Anemometer converstion?:    
-Request: "aaI0WSCON#"
-
-Returns: "aaI0STWSCONm123.4c567.89#" (from stored values)
-                                      
-## Set the Anemometer conversion:      
-Request: "aaI0WSSTm123.4c567.89#"   Where 123.4 is the gradient and 567.89 is the constant (y=mx+c)
-
-Returns: "aaI0STWSSETm123.4c567.89#" (set to the new values)
-
 
 ## Failure codes:
 If data is not that length or does not have 'aa' and '#' at start/end then return with send "aaFAIL**#" error code
