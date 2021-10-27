@@ -84,6 +84,20 @@ Maplin Vane | No Link |  Switched resistive
 
 Each unit can have a unique ID (using a solder pad for 0-7 values), so multiple units can be added to a serial bus, if needed. The defalt is 0.
 
+## PCB User Switch and User LED
+
+There is one user switch and one user LED on the unit.
+
+The LED will show a regular flash every 5 seconds. This will briefly flash once every 5 seconds if the unit is in 'Response' mode. The LED will briefyl flash twice every 5 seconds if the unit is in 'Broadcast' mode. Data will be sent at the broadcast rate.
+
+The LED will also flash whenever data is sent of the serial port. The LED will go on before data sent and then off after data is sent.
+
+
+Pressing the user switch for >0.5 seconds and then releasing will result in a switch press. A switch press will increment the mode from 0-1-2-3-4-5 then back to 0. The unit will flash after a button press to indicate the boradcast mode (so 0 flashes if the value is 0, 1 flash if the value is 1 etc). If this is set to 5 then the unit works in 'Response' mode. If this is set to 0-4 then the unit is in broadcast mode and will send the data at the relevant interval (0 = 1s, 1 = 10s, 2 = 1 min, 3 = 10 min and 4 = 1 hour). 
+
+The mode can also be set with a serial request, using the "Set the unit to broadcast:" method (see below).
+
+
 # Firmware
 This uses an ATMega328 running at 8MHz with 3.3v or 5V supply.
 
