@@ -143,7 +143,7 @@ At all other times then the unit is asleep.
 ## Wind Speed data:
 Request: “aaI0WSA4#”   Where 0 is an ID from 0-7 set by solder on PCB. 4 is the averaging period (0=1s, 1=10s, 2 = 60s, 3 = 600s, 4=3600s)
 
-Returns: "aaWSA0:3.00:5.67:1.23#"  // Where 3.00 is the data within the averaging period, 5.67 is the maximum and 1.23 is the minimum. 
+Returns: "aaWSA4:3.00:5.67:1.23#"  // Where 4 is the averaging period, 3.00 is the data within the averaging period, 5.67 is the maximum and 1.23 is the minimum. 
                                       
 ## Wind Speed data minimum:
 Request: “aaI0WSMN#”  - does not matter what averaging period. min/max are just the min/max seen.
