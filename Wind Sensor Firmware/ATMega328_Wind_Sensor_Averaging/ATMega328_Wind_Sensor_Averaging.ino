@@ -15,6 +15,9 @@
    More construction details are here:
    https://github.com/curiouselectric/WindSensor
 
+   Details on this construction are here:
+   https://www.re-innovation.co.uk/docs/anemometer-monitor-for-wind-measurements/
+
    Please see the github rpository readme for all the serial commands available.
 
    To program it then MiniCore is used:
