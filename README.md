@@ -3,7 +3,7 @@ A DIY Wind sensor interface board.
 
 This connects to various anemometers and wind vanes and provides a serial interface for averaged data from the pulses.
 
-The problem with measuring wind anemometers and wind vane is that they constantly need to be checked. You need to know at all times when puklses have come in and which direction the wind vane is facing. This requires a bit of microcontroller time and processing. This unit is designed to solve that.
+The problem with measuring wind anemometers and wind vane is that they constantly need to be checked. You need to know at all times when pulses have come in and which direction the wind vane is facing. This requires a bit of microcontroller time and processing. This unit is designed to solve that.
 Wire up your vane and anemometer. Power the unit up. Then it will save the averaged data for you. You can then get hold of the data through serial requests and process as you need.
 
 ![Overview](https://github.com/curiouselectric/WindSensor/blob/main/Wind%20Sensor%20Instructions/Images/wind%20sensor%20overview.png?raw=true)
