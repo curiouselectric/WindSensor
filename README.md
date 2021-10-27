@@ -10,6 +10,32 @@ Wire up your vane and anemometer. Power the unit up. Then it will save the avera
 
 I wrote this to interface to an ESP32 data logger, which sleeps most of the time. It wakes up, talks to the wind sensor, gets the data it needs, then goes back to sleep, knowing the wind sensor is always monitoring.
 
+It was designed as a relatively simple interface to remove the need for monitoring pulses and averaging them. 
+
+## Wind Speed Measurements
+
+The anemometer can either be a pulse output, NPN output or hall-effect output. The unit reads digital pulses, with circuitry on the unit converting the hall effect output to pulses. (Note: This unit cannot read 0-5V or analog output sensors).
+
+The unit stores average wind speeds for 1 second, 10 second, 1 min, 10 min and 1 hour values. It also records the maximum and minimum wind speed.
+
+The unit converts the pulses into a real wind speed using a y=mx+c linear conversion, where y is the wind speed and c is the number of pulses. m and c are stored in EEPROM and have default values of m=1 and c=0. These are floats and can be changed as required through the serial interface. Any updated values are stored in EEPROM. If the pulses are zero then the output is also zero (no matter what the y=mc+c function is). This stops a reading of 'c' when the pulse data is zero.
+
+## Wind Vane Measurements
+
+The wind vane input is analog. 
+
+This can read either resistive wiper vanes or stepped resistive vanes. 
+
+The stepped rsistive vanes have magnet reed switches which switch in and out different resistances. 
+The resistance then tells us the direction. A pull up reistor is required in these situations.
+
+The wind vane input can be 'trained'. So put the unit into vane training mode via the serial interface. This will run through N, NE, E, SE, S, SW, W, NW and you can hold the unit in the correct direction position and press the switch to store that data to memory. Once trained then the unit creates a buffer zone around each of the values and within the zone then the unit will record the correct direction.
+
+Wind direction is difficult to measure, as you cannot directly average the analog value (because of the 360 to 0 point where the analog value rolls around from 1024 back to 0 - this means an average of a unit pointing just off north (ie one reading of 0 and one reading of 360) will give an average of (360+0) = 180, which is south and totally wrong!). 
+
+This unit will record the number of seconds the vane has been pointing in a certain direction. This means a 'wind rose' can easily be created. This is stored and updated until it is directly reset. The unit will also return the instantaeous direction, if that is needed.
+
+
 There are two mode of operation, depending upon your use case:
 
 ## Response Mode
@@ -31,28 +57,7 @@ The two modes work together - you can have the unit sending regular data and als
 
 It runs on an ATMega328 running at 8MHz with selectable baud serial (up to 57600). It comes pre-programmed, but code can be uploaded via the Arduino IDE, using the MiniCore board add-on. See firmware for more details.
 
-Each unit can have a unique ID (using a solder pad for 0-7 values), so multiple units can be added to a serial bus, if needed. The defalt is 0.
 
-It was designed as a relatively simple interface to remove the need for monitoring pulses and averaging them. 
-
-The anemometer can either be a pulse output, NPN output or hall-effect output. The unit reads digital pulses, with circuitry on the unit converting the hall effect output to pulses. (Note: This unit cannot read 0-5V or analog output sensors).
-
-The unit stores average wind speeds for 1 second, 10 second, 1 min, 10 min and 1 hour values. It also records the maximum and minimum wind speed.
-
-The unit converts the pulses into a real wind speed using a y=mx+c linear conversion, where y is the wind speed and c is the number of pulses. m and c are stored in EEPROM and have default values of m=1 and c=0. These are floats and can be changed as required through the serial interface. Any updated values are stored in EEPROM. If the pulses are zero then the output is also zero (no matter what the y=mc+c function is). This stops a reading of 'c' when the pulse data is zero.
-
-The wind vane input is analog. 
-
-This can read either resistive wiper vanes or stepped resistive vanes. 
-
-The stepped rsistive vanes have magnet reed switches which switch in and out different resistances. 
-The resistance then tells us the direction. A pull up reistor is required in these situations.
-
-The wind vane input can be 'trained'. So put the unit into vane training mode via the serial interface. This will run through N, NE, E, SE, S, SW, W, NW and you can hold the unit in the correct direction position and press the switch to store that data to memory. Once trained then the unit creates a buffer zone around each of the values and within the zone then the unit will record the correct direction.
-
-Wind direction is difficult to measure, as you cannot directly average the analog value (because of the 360 to 0 point where the analog value rolls around from 1024 back to 0 - this means an average of a unit pointing just off north (ie one reading of 0 and one reading of 360) will give an average of (360+0) = 180, which is south and totally wrong!). 
-
-This unit will record the number of seconds the vane has been pointing in a certain direction. This means a 'wind rose' can easily be created. This is stored and updated until it is directly reset. The unit will also return the instantaeous direction, if that is needed.
 
 # Hardware
 
@@ -75,6 +80,9 @@ Wind Vane Name      |   Link   |  Type
 ---------------------|----------|-----------
 Maplin Vane | No Link |  Switched resistive
 
+## Board ID Number
+
+Each unit can have a unique ID (using a solder pad for 0-7 values), so multiple units can be added to a serial bus, if needed. The defalt is 0.
 
 # Firmware
 This uses an ATMega328 running at 8MHz with 3.3v or 5V supply.
@@ -111,7 +119,7 @@ It returns the average values and information when requested on serial port.
 At all other times then the unit is asleep.
 
 ## Wind Speed data:
-Request: “aaI0WSA4#”   Where 0 is an ID from 0-9 set by solder on PCB. 4 is the averaging period (0=1s, 1=10s, 2 = 60s, 3 = 600s, 4=3600s)
+Request: “aaI0WSA4#”   Where 0 is an ID from 0-7 set by solder on PCB. 4 is the averaging period (0=1s, 1=10s, 2 = 60s, 3 = 600s, 4=3600s)
 
 Returns: "aaWSA0:3.00:5.67:1.23#"  // Where 3.00 is the data within the averaging period, 5.67 is the maximum and 1.23 is the minimum. 
                                       
@@ -136,7 +144,7 @@ Request: "aaI0WSSTm123.4c567.89#"   Where 123.4 is the gradient and 567.89 is th
 Returns: "aaI0STWSSETm123.4c567.89#" (set to the new values)
                                       
 ## Wind Vane data: 
-Request: “aaI0WV#”   Where 0 is an ID from 0-9 set by solder on PCB. 4 is the averaging period (0=1s, 1=10s, 2 = 60s, 3 = 600s, 4=3600s)
+Request: “aaI0WV#”   Where 0 is an ID from 0-7 set by solder on PCB.
 
 Returns:    The instantaneuous direction AND the direction array data
                                      
