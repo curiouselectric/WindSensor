@@ -172,4 +172,6 @@ Wire Wire Line
 Connection ~ 3550 2700
 Wire Wire Line
 	3550 2700 3550 3350
+Text Notes 4050 2850 0    50   ~ 0
+Potential divider here:\n10k for the Maplin vane
 $EndSCHEMATC

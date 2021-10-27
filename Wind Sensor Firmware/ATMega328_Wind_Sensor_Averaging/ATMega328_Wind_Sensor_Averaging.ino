@@ -1,12 +1,21 @@
 /*
    Wind Sensor Averaging firmware for ATMega328
    by:    Matt Little
-   date:  22/8/2021
+   date:  27/10/2021
    w:     www.curiouselectric.co.uk
    e:     hello@curiouselectric.co.uk
 
    This code is for an ATMega328 unit solar sensor unit.
    This uses an ATMega328 running at 8MHz with 3.3v or 5V supply.
+
+   It returns the average values when requested on serial port.
+   Or it broadcasts wind speed and direction data at set intervals.
+   At all other times then the unit is asleep.
+
+   More construction details are here:
+   https://github.com/curiouselectric/WindSensor
+
+   Please see the github rpository readme for all the serial commands available.
 
    To program it then MiniCore is used:
    // For optiboot using 3.3V and 8MHz and with WDT we need to sort out new code:
@@ -14,58 +23,14 @@
    Install MiniCore from here: https://github.com/MCUdude/MiniCore
    Add to preferences and then board manager.
 
-  Optiboot is used as the bootlloader:
+   Use minicore to burn the bootloader with an Arduino as an ISP using the 'Burn Bootloader' option
+
+  Optiboot can also be used as the bootlloader:
   Need to download optiboot5a from here:
   https://code.google.com/archive/p/optiboot/downloads
   Install optiboot_atmega328.hex into a folder called "optiboot5a" in the hardware section
   Use this optiboot hex file for upload to the ATmega328
   Fuses are: Low = 0xFF, High = 0xDE, Extended = 0xFE
-
-   More construction details are here:
-   *** link to web page for design documentation ***
-
-   It returns the average values when requested on serial port
-   At all other times then the unit is asleep.
-
-  Here we parse the data we get on the serial port
-  Wind Speed data:                    “aaI0WSA4#”   Where 0 is an ID from 0-9 set by solder on PCB. 4 is the averaging period (0=1s, 1=10s, 2 = 60s, 3 = 600s, 4=3600s)
-                                      Returns:  "aaWSA0:3.00#"  // Where 3.00 is the data
-  Wind Speed data minimum is:         “aaI0WSMN#”  - does not matter what averaging period. min/max are just the min/max seen at max data rate.
-                                      Returns: "aaWSMN:3.00#"  // Where 3.00 is the data
-  Wind Speed data maximum data is:    “aaI0WSMX#”  - does not matter what averaging period. min/max are just the min/max seen at max data rate.
-                                      Returns: "aaWSMX:3.00#"  // Where 3.00 is the data
-
-  Wind Vane data:                    “aaI0WV#”   Where 0 is an ID from 0-9 set by solder on PCB. 4 is the averaging period (0=1s, 1=10s, 2 = 60s, 3 = 600s, 4=3600s)
-                                     Returns:    The instantaneuous direction AND the direction array data
-                                     Returns:    "aaWV=W:0.00:0.00:0.00:0.00:0.00:0.00:62.00:0.00#"
-
-  Reset the max, min and wind vane array:   "aaI0RESET#"
-                                     Returns: "aaRESET#"
-
-  What is baud rate?:                 "aaI0BD#"
-                                      Returns: "aaBD9600#"  // Where 9600 is the baud rate
-  Set Baud Rate:                      "aaI0STBD*#"  Where * is (0)1200, (1)2400, (2)9600, (3)57600, (4)115200
-                                      Returns: "aaBD9600#"   // Where 9600 is the baud rate
-
-  What is ID?:                        Mentioned at start up of unit - it is solder-programmed... cannot be changed in code.
-
-  Enter vane training mode:           "aaI0VT#"
-                                      Returns: Enter the vane training routine - use button to go through the different directiosn and set the values
-  What is Anemometer converstion?:    "aaI0WSCON#"
-                                      Returns: "aaI0STWSCONm123.4c567.89#" (from stored values)
-  Set the Anemometer conversion:      "aaI0WSSTm123.4c567.89#"   Where 123.4 is the gradient and 567.89 is the constant (y=mx+c)
-                                      Returns: "aaI0STWSSETm123.4c567.89#" (set to the new values)
-
-  Send regular data (for a remote unit):  "aaI0SEND?#" Where ? is an int 0-5. If = 5 => then dont send, 0 =>  1s send, 1 => 10s send, 2 => 60s send, 3 => 600s send, 4 => 3600 send
-                                      Returns: "aaI0OK#" if the number is correct, othewise it will send a fail.
-
-  If data is not that length or does not have 'aa' and '#' at start/end then return with send "aaFAIL**#" error code
-  Failure codes:
-    "aaFAIL1#" = String too long
-    "aaFAIL2#" = Unit ID not correct/not a number
-    "aaFAIL3#" = Channel ID is not correct/not a number
-    "aaFAIL4#" = Average not correct/not a number
-    "aaFAIL5#" = Start/End chars not correct
 
   Based on:
   http://www.arduino.cc/en/Tutorial/SerialEvent
@@ -164,10 +129,10 @@ String        errorString = "";           // a String to hold incoming data
 String        returnString = "";          // A string to hold the returned data
 bool          stringComplete = false;     // Checks if the string is complete
 byte          UNIT_ID = B00000000;        // This is the unit_id of the board itself. This will be default value. Values from 0-255 can potentially be used. 4 bit binary number? = 16 channels.
-bool          display_1s_data = false;    // This flag is for displaying the data on serial. USeful for debug?
-int           flow_control = 0;           // This defines if flow meters are attached. 0= None, 1 =  1 flow 2 = 2 flow. Stored in EEPROM.
+
 uint32_t      led_flash_timer = millis();
 bool          led_update_flag = true;
+uint8_t       led_flash_counter = 0;        // Number of flashes to do
 int           vane_training_direction = 0;    // This is used for the vane training mode
 
 volatile int  data_counter_1s = 0;
@@ -278,28 +243,8 @@ void t1SCallback() {
     // Here we want to check if we are regularly sending the data and send if needed:
     if (wind_speed_data.send_wind_speed_data == 0 && checkData.vane_training_mode == false)
     {
-      // Send 1 second data
-      digitalWrite(HC12_PWR_PIN, HIGH);
-      delay(100);  // short settling delay
-      returnString = "aaI";
-      returnString += (String)UNIT_ID;
-      returnString += "WSA0=";
-      returnString += (String)wind_speed_data.data_1s;
-      returnString += "#";
-      Serial.println(returnString);
-      returnString = "aaI";
-      returnString += (String)UNIT_ID;
-      returnString += "WV=";
-      returnString += wind_vane_data.return_direction(analogRead(VANE_PIN)); // Print the instantaneous value of the wind vane as a direction
-      for (int y = 0; y < 8; y++)
-      {
-        returnString += ":";
-        returnString += (String)wind_vane_data.direction_array_values[y];
-      }
-      returnString += "#";
-      Serial.println(returnString);
-      delay(100);  // short settling delay
-      digitalWrite(HC12_PWR_PIN, LOW);
+      sendData(0);
+      reset_data();
     }
 
     // Every second we recheck the bits of the UNIT_ID
@@ -335,28 +280,8 @@ void t10SCallback() {
     // Here we want to check if we are regularly sending the data and send if needed:
     if (wind_speed_data.send_wind_speed_data == 1 && checkData.vane_training_mode == false)
     {
-      // Send 10 second data
-      digitalWrite(HC12_PWR_PIN, HIGH);
-      delay(100);  // short settling delay
-      returnString = "aaI";
-      returnString += (String)UNIT_ID;
-      returnString += "WSA1=";
-      returnString += (String)wind_speed_data.data_10s;
-      returnString += "#";
-      Serial.println(returnString);
-      returnString = "aaI";
-      returnString += (String)UNIT_ID;
-      returnString += "WV=";
-      returnString += wind_vane_data.return_direction(analogRead(VANE_PIN)); // Print the instantaneous value of the wind vane as a direction
-      for (int y = 0; y < 8; y++)
-      {
-        returnString += ":";
-        returnString += (String)wind_vane_data.direction_array_values[y];
-      }
-      returnString += "#";
-      Serial.println(returnString);
-      delay(100);  // short settling delay
-      digitalWrite(HC12_PWR_PIN, LOW);
+      sendData(1);
+      reset_data();
     }
     data_counter_60s++;
     data_counter_10s = 0;
@@ -384,28 +309,8 @@ void t60SCallback() {
     // Here we want to check if we are regularly sending the data and send if needed:
     if (wind_speed_data.send_wind_speed_data == 2 && checkData.vane_training_mode == false)
     {
-      // Send 60 second data
-      digitalWrite(HC12_PWR_PIN, HIGH);
-      delay(100);  // short settling delay
-      returnString = "aaI";
-      returnString += (String)UNIT_ID;
-      returnString += "WSA2=";
-      returnString += (String)wind_speed_data.data_60s;
-      returnString += "#";
-      Serial.println(returnString);
-      returnString = "aaI";
-      returnString += (String)UNIT_ID;
-      returnString += "WV=";
-      returnString += wind_vane_data.return_direction(analogRead(VANE_PIN)); // Print the instantaneous value of the wind vane as a direction
-      for (int y = 0; y < 8; y++)
-      {
-        returnString += ":";
-        returnString += (String)wind_vane_data.direction_array_values[y];
-      }
-      returnString += "#";
-      Serial.println(returnString);
-      delay(100);  // short settling delay
-      digitalWrite(HC12_PWR_PIN, LOW);
+      sendData(2);
+      reset_data();
     }
 
     data_counter_600s++;
@@ -434,28 +339,8 @@ void t600SCallback() {
     // Here we want to check if we are regularly sending the data and send if needed:
     if (wind_speed_data.send_wind_speed_data == 3 && checkData.vane_training_mode == false)
     {
-      // Send 600 second data
-      digitalWrite(HC12_PWR_PIN, HIGH);
-      delay(100);  // short settling delay
-      returnString = "aaI";
-      returnString += (String)UNIT_ID;
-      returnString += "WSA3=";
-      returnString += (String)wind_speed_data.data_600s;
-      returnString += "#";
-      Serial.println(returnString);
-      returnString = "aaI";
-      returnString += (String)UNIT_ID;
-      returnString += "WV=";
-      returnString += wind_vane_data.return_direction(analogRead(VANE_PIN)); // Print the instantaneous value of the wind vane as a direction
-      for (int y = 0; y < 8; y++)
-      {
-        returnString += ":";
-        returnString += (String)wind_vane_data.direction_array_values[y];
-      }
-      returnString += "#";
-      Serial.println(returnString);
-      delay(100);  // short settling delay
-      digitalWrite(HC12_PWR_PIN, LOW);
+      sendData(3);
+      reset_data();
     }
 
   }
@@ -484,28 +369,8 @@ void t3600SCallback() {
     // Here we want to check if we are regularly sending the data and send if needed:
     if (wind_speed_data.send_wind_speed_data == 4 && checkData.vane_training_mode == false)
     {
-      // Send 3600 second data
-      digitalWrite(HC12_PWR_PIN, LOW);
-      delay(100);  // short settling delay
-      returnString = "aaI";
-      returnString += (String)UNIT_ID;
-      returnString += "WSA4=";
-      returnString += (String)wind_speed_data.data_3600s;
-      returnString += "#";
-      Serial.println(returnString);
-      returnString = "aaI";
-      returnString += (String)UNIT_ID;
-      returnString += "WV=";
-      returnString += wind_vane_data.return_direction(analogRead(VANE_PIN)); // Print the instantaneous value of the wind vane as a direction
-      for (int y = 0; y < 8; y++)
-      {
-        returnString += ":";
-        returnString += (String)wind_vane_data.direction_array_values[y];
-      }
-      returnString += "#";
-      Serial.println(returnString);
-      delay(100);  // short settling delay
-      digitalWrite(HC12_PWR_PIN, HIGH);
+      sendData(4);
+      reset_data();
     }
   }
   data_counter_3600s = 0;
@@ -569,12 +434,12 @@ void tap(Button2 & btn)
       Serial.println("#");
 
       // Also want to flash the LED to show what send mode the unit is in:
-      for(int i=0;i<wind_speed_data.send_wind_speed_data;i++)
+      for (int i = 0; i < wind_speed_data.send_wind_speed_data; i++)
       {
         digitalWrite(LED0_PIN, true);
         delay(250);
         digitalWrite(LED0_PIN, false);
-        delay(250);        
+        delay(250);
       }
     }
   }
@@ -582,17 +447,29 @@ void tap(Button2 & btn)
 
 void flashLED()
 {
-  if (millis() > (led_flash_timer + LED_FLASH_TIME + LED_ON_TIME))
+
+  if (millis() > (led_flash_timer + LED_FLASH_TIME))
   {
-    digitalWrite(LED0_PIN, display_1s_data);
+    digitalWrite(LED0_PIN, true);
     led_flash_timer = millis();
     led_update_flag = true;
   }
-  if (millis() > (led_flash_timer + LED_FLASH_TIME) && led_update_flag == true)
+  if (millis() > (led_flash_timer + LED_ON_TIME) && led_update_flag == true)
   {
-    digitalWrite(LED0_PIN, !display_1s_data);
-    led_update_flag = false;
+    digitalWrite(LED0_PIN, !digitalRead(LED0_PIN));
+    if (wind_speed_data.send_wind_speed_data > 4 || led_flash_counter > 2)
+    {
+      digitalWrite(LED0_PIN, false);
+      led_update_flag = false;
+      led_flash_counter = 0;
+    }
+    else
+    {
+      led_flash_counter++;
+    }
+    led_flash_timer = millis();
   }
+
 }
 
 // Start up
@@ -801,7 +678,7 @@ void loop()
           returnString = "aaI";
           returnString += (String)UNIT_ID;
           returnString += "WSA" + (String)checkData.ave_time; // Initialise the returned string
-          returnString += "=";
+          returnString += ":";
           for (int c = 0; c < 5; c++)
           {
             if (checkData.ave_time == c)
@@ -826,6 +703,10 @@ void loop()
               }
             }
           }
+          returnString += ":";
+          returnString += (String)wind_speed_data.data_max;
+          returnString += ":";
+          returnString += (String)wind_speed_data.data_min;
           returnString += "#";
           checkData.data_all_flag = false;
           checkData.data_sent_flag = false;
@@ -860,9 +741,7 @@ void loop()
       else if (checkData.data_reset_flag == true)
       {
         // Want to reset the wind vane direction data as previous will be wrong!
-        wind_vane_data.reset_vane_direction_array();
-        wind_speed_data.data_min = 999999;
-        wind_speed_data.data_max = 0;
+        reset_data();
         returnString = F("aaRESET#");   // This needs to be returned
         checkData.data_reset_flag = false;
         checkData.data_sent_flag = false;
@@ -877,8 +756,7 @@ void loop()
       }
       else
       {
-        // Serial.println(F("aaFAILID#"));    // This needs to be returned
-        returnString = F("aaFAILID#");
+        returnString = F("aaFAIL#");
         checkData.data_sent_flag = false;
       }
       DEBUGLN(DEBUG_FLAG, "Returned string:");
@@ -907,4 +785,67 @@ void serialEvent()
       stringComplete = true;
     }
   }
+}
+
+
+void sendData(int average_time)
+{
+  // Send 1 second data
+  digitalWrite(HC12_PWR_PIN, HIGH);
+  delay(POWER_SETTLE_TIME);  // short settling delay
+  returnString = "aaI";
+  returnString += (String)UNIT_ID;
+  returnString += "WSA";
+  returnString += (String)average_time;
+  returnString += ":";
+  for (int c = 0; c < 5; c++)
+  {
+    if (average_time == c)
+    {
+      switch (c)
+      {
+        case 0:
+          returnString += (String)wind_speed_data.data_1s;
+          break;
+        case 1:
+          returnString += (String)wind_speed_data.data_10s;
+          break;
+        case 2:
+          returnString += (String)wind_speed_data.data_60s;
+          break;
+        case 3:
+          returnString += (String)wind_speed_data.data_600s;
+          break;
+        case 4:
+          returnString += (String)wind_speed_data.data_3600s;
+          break;
+      }
+    }
+  }
+  returnString += ":";
+  returnString += (String)wind_speed_data.data_max;
+  returnString += ":";
+  returnString += (String)wind_speed_data.data_min;
+  returnString += "#";
+  Serial.println(returnString);
+  returnString = "aaI";
+  returnString += (String)UNIT_ID;
+  returnString += "WV=";
+  returnString += wind_vane_data.return_direction(analogRead(VANE_PIN)); // Print the instantaneous value of the wind vane as a direction
+  for (int y = 0; y < 8; y++)
+  {
+    returnString += ":";
+    returnString += (String)wind_vane_data.direction_array_values[y];
+  }
+  returnString += "#";
+  Serial.println(returnString);
+  delay(POWER_SETTLE_TIME);  // short settling delay
+  digitalWrite(HC12_PWR_PIN, LOW);
+}
+
+void reset_data()
+{
+  wind_vane_data.reset_vane_direction_array();
+  wind_speed_data.data_min = 999999;
+  wind_speed_data.data_max = 0;
 }

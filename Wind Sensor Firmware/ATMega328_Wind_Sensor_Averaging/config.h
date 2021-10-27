@@ -14,6 +14,8 @@
 #define LED_FLASH_TIME    5000   // time in mS between LED flashes
 #define LED_ON_TIME       100   // time in mS of the flash length
 
+#define POWER_SETTLE_TIME 50    // Time in mS to wait after power is applied before sending serial data and time to wait after data set before switching off power.
+
 //// The baud rate for serial communications
 #define MAX_BAUD_RATES    5
 
@@ -24,7 +26,7 @@
 #define DEBUG_DATA_600S   false   // Use this for debugging. Not need for roll out.
 #define DEBUG_DATA_3600S  false   // Use this for debugging. Not need for roll out.
                                     
-#define DEBOUNCE_DELAY    5       // debounce delay time in milli-Seconds This also gives max pulses - 50mS = 20 pulses per second                                   
+#define DEBOUNCE_DELAY    5       // debounce delay time in milli-Seconds This also gives max pulses - 5mS = 200 pulses per second                                   
                             
 // These three digital pins are for the Device ID selection:
 #define  GPIO_ID0      A0  //  A0 Digital 4 on Arduino
