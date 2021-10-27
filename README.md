@@ -82,14 +82,18 @@ This uses an ATMega328 running at 8MHz with 3.3v or 5V supply.
 ## Initial bootloader installation:
 You should not need to do this, as the unit should come with this already installed. This is just for information.
 
-Optiboot is used as the bootlloader:
-Need to download optiboot5a from here:
-https://code.google.com/archive/p/optiboot/downloads
+To upload a bootloader it then MiniCore is used:
 
-Install optiboot_atmega328.hex into a folder called "optiboot5a" in the hardware section
-Use this optiboot hex file for upload to the ATmega328
+Install MiniCore from here: https://github.com/MCUdude/MiniCore
 
-Fuses are: Low = 0xFF, High = 0xDE, Extended = 0xFE
+Install the bootloader using an Arduino as an ISP. https://www.arduino.cc/en/Tutorial/BuiltInExamples/ArduinoISP
+
+Wire up your arduino and an ISP 3x2 header pin onto the wind sensor PCB.
+
+Choose the "ATMega328" option with the "External 8MHz Oscillator" set.
+
+You can then use the 'Burn Bootloader' option within 'Tools' in the Arduino IDE. This will install the Minicore bootloader.
+
 
 ## Program via Arduino IDE
 
@@ -109,7 +113,7 @@ At all other times then the unit is asleep.
 ## Wind Speed data:
 Request: “aaI0WSA4#”   Where 0 is an ID from 0-9 set by solder on PCB. 4 is the averaging period (0=1s, 1=10s, 2 = 60s, 3 = 600s, 4=3600s)
 
-Returns: "aaWSA0:3.00#"  // Where 3.00 is the data
+Returns: "aaWSA0:3.00:5.67:1.23#"  // Where 3.00 is the data within the averaging period, 5.67 is the maximum and 1.23 is the minimum. 
                                       
 ## Wind Speed data minimum:
 Request: “aaI0WSMN#”  - does not matter what averaging period. min/max are just the min/max seen.
@@ -149,6 +153,8 @@ Request: "aaI0SEND?#" where ? is an int (0)= 1s data, (1)= 10s data, (2)= 60s/1 
 Returns: "aaI0SENDOK#"
 
 You can also set the unit to broadcast using the user switch. Press the button for around 0.5s or more then release. This will go through the boradcast modes from 0-1-2-3-4-5 then back round to 0. The LED will flash the number of times for the setting (so send = 0 the unit will not flash, but data will appear within 1 second!).
+
+If the unit is in broadcast mode then the minimum and maximum wind speeds and the wind vane data are all reset each time period.
 
 ## What is baud rate?:                 
 Request: "aaI0BD#"
