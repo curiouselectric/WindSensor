@@ -57,8 +57,6 @@ The two modes work together - you can have the unit sending regular data and als
 
 It runs on an ATMega328 running at 8MHz with selectable baud serial (up to 57600). It comes pre-programmed, but code can be uploaded via the Arduino IDE, using the MiniCore board add-on. See firmware for more details.
 
-
-
 # Hardware
 
 The PCB was designed in KiCAD and is available here. A small PCB has been designed.
@@ -141,44 +139,44 @@ It returns the average values and information when requested on serial port.
 At all other times then the unit is asleep.
 
 ## Wind Speed data:
-Request: “aaI0WSA4#”   Where 0 is an ID from 0-7 set by solder on PCB. 4 is the averaging period (0=1s, 1=10s, 2 = 60s, 3 = 600s, 4=3600s)
+Request: “aaI0WSA4#”  ("aaI0WSA4?19#" with CRC)  Where 0 is an ID from 0-7 set by solder on PCB. 4 is the averaging period (0=1s, 1=10s, 2 = 60s, 3 = 600s, 4=3600s)  
 
 Returns: "aaWSA4:3.00:5.67:1.23#"  // Where 4 is the averaging period, 3.00 is the data within the averaging period, 5.67 is the maximum and 1.23 is the minimum. 
                                       
 ## Wind Speed data minimum:
-Request: “aaI0WSMN#”  - does not matter what averaging period. min/max are just the min/max seen.
+Request: “aaI0WSMN#” ("aaI0WSMN?84#" with CRC) - does not matter what averaging period. min/max are just the min/max seen.
 
 Returns: "aaWSMN:3.00#"  // Where 3.00 is the data
                                       
 ## Wind Speed data maximum:
-Request: “aaI0WSMX#”  - does not matter what averaging period. min/max are just the min/max seen.
+Request: “aaI0WSMX#”  ("aaI0WSMX?e6#" with CRC) - does not matter what averaging period. min/max are just the min/max seen.
 
 Returns: "aaWSMX:3.00#"  // Where 3.00 is the data
 
 ## What is Anemometer conversion?:    
-Request: "aaI0WSCON#"
+Request: "aaI0WSCON#" ("aaI0WSCON?41#" with CRC)
 
 Returns: "aaI0STWSCONm123.4c567.89#" (from stored values)
                                       
 ## Set the Anemometer conversion:      
-Request: "aaI0WSSTm123.4c567.89#"   Where 123.4 is the gradient and 567.89 is the constant (y=mx+c)
+Request: "aaI0WSSTm123.4c567.89#"  ("aaI0WSSTm123.4c567.89?38#" with CRC) Where 123.4 is the gradient and 567.89 is the constant (y=mx+c)
 
 Returns: "aaI0STWSSETm123.4c567.89#" (set to the new values)
                                       
 ## Wind Vane data: 
-Request: “aaI0WV#”   Where 0 is an ID from 0-7 set by solder on PCB.
+Request: “aaI0WV#”  ("" with CRC) Where 0 is an ID from 0-7 set by solder on PCB.
 
 Returns:    The instantaneuous direction AND the direction array data
                                      
 Returns:    "aaWV=W:0.00:0.00:0.00:0.00:0.00:0.00:62.00:0.00#"
                                      
 ## Reset the max, min and wind vane array:  
-Request: "aaI0RESET#"
+Request: "aaI0RESET#" ("aaI0RESET?d9#" with CRC)
 
 Returns: "aaRESET#"
 
 ## Set the unit to broadcast:  
-Request: "aaI0SEND?#" where ? is an int (0)= 1s data, (1)= 10s data, (2)= 60s/1 min data, (3)= 600s/10 min data, (4)= 3600s/1hr data, (5)= NO data
+Request: "aaI0SEND?#" where ? is an int (0)= 1s data, (1)= 10s data, (2)= 60s/1 min data, (3)= 600s/10 min data, (4)= 3600s/1hr data, (5)= NO data 
 
 Returns: "aaI0SENDOK#"
 
@@ -187,7 +185,7 @@ You can also set the unit to broadcast using the user switch. Press the button f
 If the unit is in broadcast mode then the minimum and maximum wind speeds and the wind vane data are all reset each time period.
 
 ## What is baud rate?:                 
-Request: "aaI0BD#"
+Request: "aaI0BD#" ("aaI0BD?dc#" with CRC)
 
 Returns: "aaBD9600#"  // Where 9600 is the baud rate
                                       
@@ -215,7 +213,7 @@ NC     |Solder |Solder | 6
 Solder |Solder |Solder | 7
 
 ## Enter vane training mode:           
-Request: "aaI0VT#"
+Request: "aaI0VT#" ("aaI0VT?af#" with CRC)
 
 Returns: Enter the vane training routine - use button to go through the different directions and set the values.
 
@@ -226,7 +224,25 @@ Move the vane to this position and press the user switch (for around 0.5 seconds
 The serial port will show then next direction and will got N, NE, E, SE, S, SW, W, NW and then end.
 
 When it ends this data is stored within the unit and the direction 'bands' are recaluclated.
-                                      
+
+## Add CRC check:           
+Within the config of the firmware a CRC (Cyclic Redundancy Check) can be added to the data (or not!).
+
+Set this true using the flag:
+
+#define ADD_CRC_CHECK     true    // Use this to add CRC check to incomming and outgoing messages
+
+This uses the CRC routines from Rob Tillaart, available here: https://github.com/RobTillaart/CRC
+
+A 'crc8' is perfromed on the data and a 2 byte CRC code is added to all replys (and expected on all enquiries). This is added between a ? and # symbol.
+
+If no CRC then the end char is a #.
+
+For example: aaI0RESET?d9# has the CRC check d9 added to the reset request.
+
+Remember: Capitalisation will affect the results: D is not the same as d!
+
+You can use this online calculator to check your CRC: https://crccalc.com/ The type of CRC is CRC-8/SMBUS.
 
 ## Failure codes:
 If data is not that length or does not have 'aa' and '#' at start/end then return with send "aaFAIL**#" error code
