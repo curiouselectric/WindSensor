@@ -146,29 +146,29 @@ Returns: "aaWSA4:3.00:5.67:1.23#"  // Where 4 is the averaging period, 3.00 is t
 ## Wind Speed data minimum:
 Request: “aaI0WSMN#” ("aaI0WSMN?84#" with CRC) - does not matter what averaging period. min/max are just the min/max seen.
 
-Returns: "aaWSMN:3.00#"  // Where 3.00 is the data
+Returns: "aaWSMN:3.00#"  // Where 3.00 is the data + CRC if requested
                                       
 ## Wind Speed data maximum:
 Request: “aaI0WSMX#”  ("aaI0WSMX?e6#" with CRC) - does not matter what averaging period. min/max are just the min/max seen.
 
-Returns: "aaWSMX:3.00#"  // Where 3.00 is the data
+Returns: "aaWSMX:3.00#"  // Where 3.00 is the data + CRC if requested
 
 ## What is Anemometer conversion?:    
 Request: "aaI0WSCON#" ("aaI0WSCON?41#" with CRC)
 
-Returns: "aaI0STWSCONm123.4c567.89#" (from stored values)
+Returns: "aaI0STWSCONm123.4c567.89#" (from stored values) + CRC if requested
                                       
 ## Set the Anemometer conversion:      
 Request: "aaI0WSSTm123.4c567.89#"  ("aaI0WSSTm123.4c567.89?38#" with CRC) Where 123.4 is the gradient and 567.89 is the constant (y=mx+c)
 
-Returns: "aaI0STWSSETm123.4c567.89#" (set to the new values)
+Returns: "aaI0STWSSETm123.4c567.89#" (set to the new values) + CRC if requested
                                       
 ## Wind Vane data: 
-Request: “aaI0WV#”  ("" with CRC) Where 0 is an ID from 0-7 set by solder on PCB.
+Request: “aaI0WV#”  ("aaI0WV?b4#" with CRC) Where 0 is an ID from 0-7 set by solder on PCB.
 
 Returns:    The instantaneuous direction AND the direction array data
                                      
-Returns:    "aaWV=W:0.00:0.00:0.00:0.00:0.00:0.00:62.00:0.00#"
+Returns:    "aaWV=W:0.00:0.00:0.00:0.00:0.00:0.00:62.00:0.00#" + CRC if requested
                                      
 ## Reset the max, min and wind vane array:  
 Request: "aaI0RESET#" ("aaI0RESET?d9#" with CRC)
@@ -178,7 +178,7 @@ Returns: "aaRESET#"
 ## Set the unit to broadcast:  
 Request: "aaI0SEND?#" where ? is an int (0)= 1s data, (1)= 10s data, (2)= 60s/1 min data, (3)= 600s/10 min data, (4)= 3600s/1hr data, (5)= NO data 
 
-Returns: "aaI0SENDOK#"
+Returns: "aaI0SENDOK#" + CRC if requested
 
 You can also set the unit to broadcast using the user switch. Press the button for around 0.5s or more then release. This will go through the boradcast modes from 0-1-2-3-4-5 then back round to 0. The LED will flash the number of times for the setting (so send = 0 the unit will not flash, but data will appear within 1 second!).
 
@@ -187,12 +187,12 @@ If the unit is in broadcast mode then the minimum and maximum wind speeds and th
 ## What is baud rate?:                 
 Request: "aaI0BD#" ("aaI0BD?dc#" with CRC)
 
-Returns: "aaBD9600#"  // Where 9600 is the baud rate
+Returns: "aaBD9600#"  // Where 9600 is the baud rate + CRC if requested
                                       
 ## Set Baud Rate:                      
 Request: "aaI0STBD*#"  Where * is (0)1200, (1)2400, (2)9600, (3)57600, (4)115200
 
-Returns: "aaBD9600#"   // Where 9600 is the baud rate
+Returns: "aaBD9600#"   // Where 9600 is the baud rate + CRC if requested
 
 ## What is ID?:                        
 Mentioned at start up of unit - it is solder-programmed... cannot be changed in code.
@@ -245,7 +245,7 @@ Remember: Capitalisation will affect the results: D is not the same as d!
 You can use this online calculator to check your CRC: https://crccalc.com/ The type of CRC is CRC-8/SMBUS.
 
 ## Failure codes:
-If data is not that length or does not have 'aa' and '#' at start/end then return with send "aaFAIL**#" error code
+If data is not that length or does not have 'aa' and '#' at start/end then return with send "aaFAIL**#" error code. All will have CRC on these codes, if requested.
 
 "aaFAIL1#" = String too long
 
