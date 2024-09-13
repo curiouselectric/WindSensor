@@ -228,9 +228,9 @@ When it ends this data is stored within the unit and the direction 'bands' are r
 ## Add CRC check:           
 Within the config of the firmware a CRC (Cyclic Redundancy Check) can be added to the data (or not!).
 
-Set this true using the flag:
+Set this true using the flag in the config.h file:
 
-#define ADD_CRC_CHECK     true    // Use this to add CRC check to incomming and outgoing messages
+  #define ADD_CRC_CHECK     true    // Use this to add CRC check to incomming and outgoing messages
 
 This uses the CRC routines from Rob Tillaart, available here: https://github.com/RobTillaart/CRC
 
