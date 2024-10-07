@@ -225,10 +225,11 @@ The serial port will show then next direction and will got N, NE, E, SE, S, SW, 
 
 The unit will also send "aaI0WVOK=NW" + CRC +"#" to report back which direction the unit is now being trained.
 
-When in training mode, the command "aaI0PRESS" + CRC + "#" will act just like a button press and shift on to the next training direction. This is for control via a data logger without access to the physical switch.
-
 When it ends this data is stored within the unit and the direction 'bands' are recaluclated.
 
+## Serial 'Button' press
+
+The command "aaI0BUTTON" + CRC + "#" will act just like a button press. This is for control via a data logger serial port without access to the physical switch.
 
 ## Add CRC check:           
 Within the config of the firmware a CRC (Cyclic Redundancy Check) can be added to the data (or not!).
