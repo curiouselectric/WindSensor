@@ -223,7 +223,12 @@ Move the vane to this position and press the user switch (for around 0.5 seconds
 
 The serial port will show then next direction and will got N, NE, E, SE, S, SW, W, NW and then end.
 
+The unit will also send "aaI0WVOK=NW" + CRC +"#" to report back which direction the unit is now being trained.
+
+When in training mode, the command "aaI0PRESS" + CRC + "#" will act just like a button press and shift on to the next training direction. This is for control via a data logger without access to the physical switch.
+
 When it ends this data is stored within the unit and the direction 'bands' are recaluclated.
+
 
 ## Add CRC check:           
 Within the config of the firmware a CRC (Cyclic Redundancy Check) can be added to the data (or not!).
