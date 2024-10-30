@@ -30,8 +30,8 @@ String check_data::parseData(String _inputString, byte _UNIT_ID, data_channel _l
     {
       if (ADD_CRC_CHECK && !check_CRC(_inputString))
       {
-         error_flag = true;
-         _outputString = "aaFAILCRC";  
+        error_flag = true;
+        _outputString = "aaFAILCRC";
       }
       else if ((ADD_CRC_CHECK && check_CRC(_inputString)) || !ADD_CRC_CHECK) // Only need to check CRC if ADD_CRC_CHECK flag is high:
       {
@@ -159,6 +159,11 @@ String check_data::parseData(String _inputString, byte _UNIT_ID, data_channel _l
               // if we ask for "aaI0WV#" then it will return the wind vane data
               vane_data_flag = true;
             }
+            else if (_inputString.charAt(4) == 'B' && _inputString.charAt(5) == 'U' && _inputString.charAt(6) == 'T' && _inputString.charAt(7) == 'T' && _inputString.charAt(8) == 'O' && _inputString.charAt(9) == 'N')
+            {
+              // if we ask: "aaI0BUTTON#" (+CRC if needed) then this is the same as pressing on-board button - set flag high and deal with it in main sketch.
+              button_press_flag = true;
+            }
             else
             {
               error_flag = true;
@@ -187,8 +192,5 @@ String check_data::parseData(String _inputString, byte _UNIT_ID, data_channel _l
     error_flag = true;
     _outputString = "aaFAIL5";
   }
-
-
-  
   return (_outputString);
 }

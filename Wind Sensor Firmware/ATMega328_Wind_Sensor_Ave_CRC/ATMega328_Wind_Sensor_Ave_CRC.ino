@@ -403,10 +403,28 @@ void tap(Button2 & btn)
       // Want to store the vane_direction value into EEPROM at the correct location:
 
       // We store the 1 second average here:
-      wind_vane_data.write_direction_array(vane_training_direction, analogRead(VANE_PIN) );
+      wind_vane_data.write_direction_array(vane_training_direction, analogRead(VANE_PIN));
 
       // Then increment the counter (next direction)
       vane_training_direction++;
+
+      // ****** Start of button press for datalogger
+      // Need to give command saying button has been pressed (and which direction now in)
+      returnString = "aaI";
+      returnString += (String)UNIT_ID;
+      returnString += "WVOK=";
+      returnString += wind_vane_data.vane_directions[vane_training_direction]; // Print the instantaneous value of the wind vane as a direction
+      if (ADD_CRC_CHECK)
+      {
+        // Add the CRC here: This adds the ? the CRC and the # to the end
+        returnString = add_CRC(returnString);
+      }
+      else
+      {
+        returnString += "#";
+      }
+      Serial.println(returnString);
+      // ****** End of button press for datalogger
 
       if (vane_training_direction >= 8)
       {
@@ -422,6 +440,7 @@ void tap(Button2 & btn)
         wind_vane_data.reset_vane_direction_array();
         Serial.println(F("Finished Training"));
       }
+      checkData.button_press_flag = false;
     }
     else
     {
@@ -768,17 +787,24 @@ void loop()
         checkData.data_sent_flag = false;
       }
 
-      if (ADD_CRC_CHECK)
+      if (checkData.button_press_flag == true)
       {
-        // Add the CRC here: This adds the ? the CRC and the # to the end
-        returnString = add_CRC(returnString);
+        tap(buttonA);
       }
       else
       {
-        returnString += "#";
+        if (ADD_CRC_CHECK)
+        {
+          // Add the CRC here: This adds the ? the CRC and the # to the end
+          returnString = add_CRC(returnString);
+        }
+        else
+        {
+          returnString += "#";
+        }
+        DEBUGLN(DEBUG_FLAG, "Returned string:");
+        Serial.println(returnString);
       }
-      DEBUGLN(DEBUG_FLAG, "Returned string:");
-      Serial.println(returnString);
     }
     inputString = "";
     stringComplete = false;

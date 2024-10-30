@@ -4782,7 +4782,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "10k"
+		(property "Value" "4k7"
 			(at 207.01 76.2 90)
 			(effects
 				(font
@@ -4845,7 +4845,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer Part" "MC01W080554K7"
+		(property "Manufacturer Part" "0805W8F4701T5E"
 			(at 208.28 69.85 0)
 			(effects
 				(font
@@ -4882,6 +4882,51 @@
 			)
 		)
 		(property "JLCPCB Cost" "0.0031"
+			(at 208.28 69.85 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Supplier 2" ""
+			(at 208.28 69.85 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Supplier 2 Code" ""
+			(at 208.28 69.85 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Supplier 2 Web" ""
+			(at 208.28 69.85 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" ""
+			(at 208.28 69.85 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Supplier 2 Cost" ""
 			(at 208.28 69.85 0)
 			(effects
 				(font
@@ -5890,7 +5935,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "10k"
+		(property "Value" "4k7"
 			(at 203.2 76.2 90)
 			(effects
 				(font
@@ -5953,7 +5998,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer Part" "MC01W080554K7"
+		(property "Manufacturer Part" "0805W8F4701T5E"
 			(at 204.47 69.85 0)
 			(effects
 				(font
@@ -5990,6 +6035,51 @@
 			)
 		)
 		(property "JLCPCB Cost" "0.0031"
+			(at 204.47 69.85 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Supplier 2" ""
+			(at 204.47 69.85 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Supplier 2 Code" ""
+			(at 204.47 69.85 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Supplier 2 Web" ""
+			(at 204.47 69.85 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" ""
+			(at 204.47 69.85 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Supplier 2 Cost" ""
 			(at 204.47 69.85 0)
 			(effects
 				(font
