@@ -141,17 +141,17 @@ At all other times then the unit is asleep.
 ## Wind Speed data:
 Request: “aaI0WSA4#”  ("aaI0WSA4?19#" with CRC)  Where 0 is an ID from 0-7 set by solder on PCB. 4 is the averaging period (0=1s, 1=10s, 2 = 60s, 3 = 600s, 4=3600s)  
 
-Returns: "aaWSA4:3.00:5.67:1.23#"  // Where 4 is the averaging period, 3.00 is the data within the averaging period, 5.67 is the maximum and 1.23 is the minimum. 
+Returns: "aaI0WSA4:3.00:5.67:1.23#"  // Where 4 is the averaging period, 3.00 is the data within the averaging period, 5.67 is the maximum and 1.23 is the minimum. 
                                       
 ## Wind Speed data minimum:
 Request: “aaI0WSMN#” ("aaI0WSMN?84#" with CRC) - does not matter what averaging period. min/max are just the min/max seen.
 
-Returns: "aaWSMN:3.00#"  // Where 3.00 is the data + CRC if requested
+Returns: "aaI0WSMN:3.00#"  // Where 3.00 is the data + CRC if requested
                                       
 ## Wind Speed data maximum:
 Request: “aaI0WSMX#”  ("aaI0WSMX?e6#" with CRC) - does not matter what averaging period. min/max are just the min/max seen.
 
-Returns: "aaWSMX:3.00#"  // Where 3.00 is the data + CRC if requested
+Returns: "aaI0WSMX:3.00#"  // Where 3.00 is the data + CRC if requested
 
 ## What is Anemometer conversion?:    
 Request: "aaI0WSCON#" ("aaI0WSCON?41#" with CRC)
@@ -168,7 +168,7 @@ Request: “aaI0WV#”  ("aaI0WV?b4#" with CRC) Where 0 is an ID from 0-7 set by
 
 Returns:    The instantaneuous direction AND the direction array data
                                      
-Returns:    "aaWV=W:0.00:0.00:0.00:0.00:0.00:0.00:62.00:0.00#" + CRC if requested
+Returns:    "aaI0WV=W:0.00:0.00:0.00:0.00:0.00:0.00:62.00:0.00#" + CRC if requested
                                      
 ## Reset the max, min and wind vane array:  
 Request: "aaI0RESET#" ("aaI0RESET?d9#" with CRC)
@@ -223,7 +223,13 @@ Move the vane to this position and press the user switch (for around 0.5 seconds
 
 The serial port will show then next direction and will got N, NE, E, SE, S, SW, W, NW and then end.
 
+The unit will also send "aaI0WVOK=NW" + CRC +"#" to report back which direction the unit is now being trained.
+
 When it ends this data is stored within the unit and the direction 'bands' are recaluclated.
+
+## Serial 'Button' press
+
+The command "aaI0BUTTON" + CRC + "#" will act just like a button press. This is for control via a data logger serial port without access to the physical switch.
 
 ## Add CRC check:           
 Within the config of the firmware a CRC (Cyclic Redundancy Check) can be added to the data (or not!).
