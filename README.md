@@ -162,6 +162,8 @@ Returns: "aaI0STWSCONm123.4c567.89#" (from stored values) + CRC if requested
 Request: "aaI0WSSTm123.4c567.89#"  ("aaI0WSSTm123.4c567.89?38#" with CRC) Where 123.4 is the gradient and 567.89 is the constant (y=mx+c)
 
 Returns: "aaI0STWSSETm123.4c567.89#" (set to the new values) + CRC if requested
+
+Request: "aaI0WSSTm1c0#" or "aaI0WSSTm1c0?da#" with CRC to set m= 1 and c=0. This is useful for initial testing.
                                       
 ## Wind Vane data: 
 Request: “aaI0WV#”  ("aaI0WV?b4#" with CRC) Where 0 is an ID from 0-7 set by solder on PCB.
