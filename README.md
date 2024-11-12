@@ -35,6 +35,8 @@ Wind direction is difficult to measure, as you cannot directly average the analo
 
 This unit will record the number of seconds the vane has been pointing in a certain direction. This means a 'wind rose' can easily be created. This is stored and updated until it is directly reset. The unit will also return the instantaeous direction, if that is needed.
 
+Note: there is a 3V3 zener diode on the input to the Wind Vane unit. If you power the device with 3.3V then this is no problem. If you power the device with 5V then you will need to ensure the voltage at VANE does not go above 3.3V or else it will be limited.
+
 
 There are two mode of operation, depending upon your use case:
 
