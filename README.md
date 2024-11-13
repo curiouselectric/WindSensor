@@ -35,6 +35,8 @@ Wind direction is difficult to measure, as you cannot directly average the analo
 
 This unit will record the number of seconds the vane has been pointing in a certain direction. This means a 'wind rose' can easily be created. This is stored and updated until it is directly reset. The unit will also return the instantaeous direction, if that is needed.
 
+Note: there is a 3V3 zener diode on the input to the Wind Vane unit. If you power the device with 3.3V then this is no problem. If you power the device with 5V then you will need to ensure the voltage at VANE does not go above 3.3V or else it will be limited.
+
 
 There are two mode of operation, depending upon your use case:
 
@@ -162,6 +164,8 @@ Returns: "aaI0STWSCONm123.4c567.89#" (from stored values) + CRC if requested
 Request: "aaI0WSSTm123.4c567.89#"  ("aaI0WSSTm123.4c567.89?38#" with CRC) Where 123.4 is the gradient and 567.89 is the constant (y=mx+c)
 
 Returns: "aaI0STWSSETm123.4c567.89#" (set to the new values) + CRC if requested
+
+Request: "aaI0WSSTm1c0#" or "aaI0WSSTm1c0?da#" with CRC to set m= 1 and c=0. This is useful for initial testing.
                                       
 ## Wind Vane data: 
 Request: “aaI0WV#”  ("aaI0WV?b4#" with CRC) Where 0 is an ID from 0-7 set by solder on PCB.
