@@ -925,7 +925,7 @@
 	)
 	(text "This adds some filtering and overvoltage protection for different wind vanes\nWind vane with 8 reed switchs + resistors - Output is stepped voltage\nWind vane with potentionmeter - Output is continous voltage"
 		(exclude_from_sim no)
-		(at 96.52 134.62 0)
+		(at 92.202 129.54 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -934,9 +934,9 @@
 		)
 		(uuid "3c905877-14b2-4371-a4d8-d78cbbf1e8fa")
 	)
-	(text "Low Pass Filter\n10k 0.1uf = 160Hz"
+	(text "Low Pass Filter\n10k 0.1uf = 160Hz\nBut causes attenuation.\nSo using 22R and 0.1uf here."
 		(exclude_from_sim no)
-		(at 74.93 114.3 0)
+		(at 71.628 118.364 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -947,7 +947,7 @@
 	)
 	(text "Potential divider here:\n10k for the Maplin vane"
 		(exclude_from_sim no)
-		(at 70.104 73.914 0)
+		(at 79.248 71.374 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -1850,7 +1850,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "10k"
+		(property "Value" "22R"
 			(at 75.057 87.122 0)
 			(effects
 				(font
@@ -1922,7 +1922,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer Part" "MCMR08X1002FTL"
+		(property "Manufacturer Part" "0805W8J0220T5E"
 			(at 76.2 88.9 0)
 			(effects
 				(font
@@ -1931,7 +1931,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C17414"
+		(property "LCSC" "C25295"
 			(at 76.2 88.9 0)
 			(effects
 				(font

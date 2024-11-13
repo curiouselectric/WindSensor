@@ -534,6 +534,8 @@ void setup() {
   bitWrite(UNIT_ID, 1, !digitalRead(GPIO_ID1));
   bitWrite(UNIT_ID, 2, !digitalRead(GPIO_ID2));
 
+  analogReference(DEFAULT);
+
   // This is re-checked every second or after reset
   if (DEBUG_FLAG == true)
   {
