@@ -923,9 +923,20 @@
 		)
 		(uuid "e3706563-167d-472e-b826-65243a97bff6")
 	)
+	(text "Do NOT fit D1.\nUse 5v6 or higher here!"
+		(exclude_from_sim no)
+		(at 99.06 87.376 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "24340f6d-6833-4496-86cd-d382011e925b")
+	)
 	(text "This adds some filtering and overvoltage protection for different wind vanes\nWind vane with 8 reed switchs + resistors - Output is stepped voltage\nWind vane with potentionmeter - Output is continous voltage"
 		(exclude_from_sim no)
-		(at 92.202 129.54 0)
+		(at 98.552 142.748 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -934,7 +945,7 @@
 		)
 		(uuid "3c905877-14b2-4371-a4d8-d78cbbf1e8fa")
 	)
-	(text "Low Pass Filter\n10k 0.1uf = 160Hz\nBut causes attenuation.\nSo using 22R and 0.1uf here."
+	(text "Low Pass Filter\n10k 0.1uf = 160Hz\n"
 		(exclude_from_sim no)
 		(at 71.628 118.364 0)
 		(effects
@@ -947,7 +958,7 @@
 	)
 	(text "Potential divider here:\n10k for the Maplin vane"
 		(exclude_from_sim no)
-		(at 79.248 71.374 0)
+		(at 65.786 66.04 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -1307,7 +1318,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "3V3_Zener"
+		(property "Value" "5V6_Zener"
 			(at 108.4326 101.473 90)
 			(effects
 				(font
@@ -1342,7 +1353,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" " C493206"
+		(property "LCSC" " C213355"
 			(at 106.68 100.33 0)
 			(effects
 				(font
@@ -1492,7 +1503,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "5V1_Zener"
+		(property "Value" "5V6_Zener"
 			(at 175.7426 104.013 90)
 			(effects
 				(font
@@ -1527,7 +1538,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C131770"
+		(property "LCSC" " C213355"
 			(at 173.99 102.87 0)
 			(effects
 				(font
@@ -1537,6 +1548,105 @@
 			)
 		)
 		(property "JLCPCB Add" "Y"
+			(at 173.99 102.87 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Supplier 1" ""
+			(at 173.99 102.87 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Supplier 1 Code" ""
+			(at 173.99 102.87 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Supplier 1 Web" ""
+			(at 173.99 102.87 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Supplier 2" ""
+			(at 173.99 102.87 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Supplier 2 Code" ""
+			(at 173.99 102.87 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Supplier 2 Web" ""
+			(at 173.99 102.87 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" ""
+			(at 173.99 102.87 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer Part" ""
+			(at 173.99 102.87 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Supplier 1 Cost" ""
+			(at 173.99 102.87 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Supplier 2 Cost" ""
+			(at 173.99 102.87 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "JLCPCB Cost" ""
 			(at 173.99 102.87 0)
 			(effects
 				(font

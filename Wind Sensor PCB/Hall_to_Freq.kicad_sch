@@ -2074,7 +2074,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "3V3_Zener"
+		(property "Value" "5V6_Zener"
 			(at 135.1026 74.803 90)
 			(effects
 				(font
@@ -2109,7 +2109,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" " C493206"
+		(property "LCSC" " C213355"
 			(at 133.35 73.66 0)
 			(effects
 				(font
