@@ -73,8 +73,8 @@
 		(allow_soldermask_bridges_in_footprints no)
 		(aux_axis_origin 91.44 132.08)
 		(pcbplotparams
-			(layerselection 0x00010fc_ffffffff)
-			(plot_on_all_layers_selection 0x0000000_00000000)
+			(layerselection 0x0000020_ffffffff)
+			(plot_on_all_layers_selection 0x0001000_00000000)
 			(disableapertmacros no)
 			(usegerberextensions no)
 			(usegerberattributes yes)
@@ -103,11 +103,11 @@
 			(plotinvisibletext no)
 			(sketchpadsonfab no)
 			(subtractmaskfromsilk no)
-			(outputformat 1)
+			(outputformat 5)
 			(mirror no)
 			(drillshape 0)
 			(scaleselection 1)
-			(outputdirectory "GERBER/")
+			(outputdirectory "SVG/")
 		)
 	)
 	(net 0 "")
@@ -40443,6 +40443,72 @@
 				(thickness 0.2)
 			)
 		)
+	)
+	(dimension
+		(type aligned)
+		(layer "F.SilkS")
+		(uuid "c5cb7244-7b23-45ea-a815-0a230e115870")
+		(pts
+			(xy 132.969 89.281) (xy 132.9234 134.2386)
+		)
+		(height 14.601298)
+		(gr_text "44.9576 mm"
+			(at 117.194911 111.743824 89.94188554)
+			(layer "F.SilkS")
+			(uuid "c5cb7244-7b23-45ea-a815-0a230e115870")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(format
+			(prefix "")
+			(suffix "")
+			(units 3)
+			(units_format 1)
+			(precision 4)
+		)
+		(style
+			(thickness 0.15)
+			(arrow_length 1.27)
+			(text_position_mode 0)
+			(extension_height 0.58642)
+			(extension_offset 0.5) keep_text_aligned)
+	)
+	(dimension
+		(type aligned)
+		(layer "F.SilkS")
+		(uuid "d78efd40-879e-45cd-ad98-f171aa954798")
+		(pts
+			(xy 167.8738 92.6334) (xy 167.82494 130.93854)
+		)
+		(height -13.983932)
+		(gr_text "38.3052 mm"
+			(at 180.683292 111.80234 89.92691659)
+			(layer "F.SilkS")
+			(uuid "d78efd40-879e-45cd-ad98-f171aa954798")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(format
+			(prefix "")
+			(suffix "")
+			(units 3)
+			(units_format 1)
+			(precision 4)
+		)
+		(style
+			(thickness 0.15)
+			(arrow_length 1.27)
+			(text_position_mode 0)
+			(extension_height 0.58642)
+			(extension_offset 0.5) keep_text_aligned)
 	)
 	(segment
 		(start 166.751 102.997)

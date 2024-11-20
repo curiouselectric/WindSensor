@@ -490,7 +490,7 @@
       "gencad": "",
       "idf": "",
       "netlist": "WindSensorATMEGA328_PCB.net",
-      "plot": "GERBER/",
+      "plot": "SVG/",
       "pos_files": "",
       "specctra_dsn": "",
       "step": "",

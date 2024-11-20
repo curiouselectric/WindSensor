@@ -705,7 +705,7 @@
 	)
 	(wire
 		(pts
-			(xy 223.52 90.17) (xy 223.52 87.63)
+			(xy 161.29 78.74) (xy 161.29 76.2)
 		)
 		(stroke
 			(width 0)
@@ -745,7 +745,7 @@
 	)
 	(wire
 		(pts
-			(xy 223.52 80.01) (xy 223.52 77.47)
+			(xy 161.29 68.58) (xy 161.29 66.04)
 		)
 		(stroke
 			(width 0)
@@ -923,9 +923,20 @@
 		)
 		(uuid "e3706563-167d-472e-b826-65243a97bff6")
 	)
-	(text "Do NOT fit D1.\nUse 5v6 or higher here!"
+	(text "NOT FITTED - for user to add"
 		(exclude_from_sim no)
-		(at 99.06 87.376 0)
+		(at 69.342 74.168 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "11c13e87-a827-4c45-af42-0799e0dd0147")
+	)
+	(text "Use 5v6 or higher here!"
+		(exclude_from_sim no)
+		(at 99.314 87.63 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -936,7 +947,7 @@
 	)
 	(text "This adds some filtering and overvoltage protection for different wind vanes\nWind vane with 8 reed switchs + resistors - Output is stepped voltage\nWind vane with potentionmeter - Output is continous voltage"
 		(exclude_from_sim no)
-		(at 98.552 142.748 0)
+		(at 94.234 128.524 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -958,7 +969,7 @@
 	)
 	(text "Potential divider here:\n10k for the Maplin vane"
 		(exclude_from_sim no)
-		(at 65.786 66.04 0)
+		(at 62.992 66.04 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -969,7 +980,7 @@
 	)
 	(hierarchical_label "GND"
 		(shape input)
-		(at 223.52 90.17 0)
+		(at 161.29 78.74 0)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -1029,7 +1040,7 @@
 	)
 	(hierarchical_label "Vcc"
 		(shape input)
-		(at 223.52 77.47 0)
+		(at 161.29 66.04 0)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -1207,7 +1218,7 @@
 	)
 	(symbol
 		(lib_id "device:C")
-		(at 223.52 83.82 180)
+		(at 161.29 72.39 180)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -1215,7 +1226,7 @@
 		(dnp no)
 		(uuid "00000000-0000-0000-0000-000060fe1b8a")
 		(property "Reference" "C4"
-			(at 222.885 86.36 0)
+			(at 160.655 74.93 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1224,7 +1235,7 @@
 			)
 		)
 		(property "Value" "100n"
-			(at 222.885 81.28 0)
+			(at 160.655 69.85 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1233,7 +1244,7 @@
 			)
 		)
 		(property "Footprint" "REInnovationFootprint:SM_C_0805"
-			(at 222.5548 80.01 0)
+			(at 160.3248 68.58 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1242,7 +1253,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 223.52 83.82 0)
+			(at 161.29 72.39 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1250,7 +1261,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 223.52 83.82 0)
+			(at 161.29 72.39 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1259,7 +1270,7 @@
 			)
 		)
 		(property "LCSC" "C49678"
-			(at 223.52 83.82 0)
+			(at 161.29 72.39 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1268,7 +1279,7 @@
 			)
 		)
 		(property "JLCPCB Add" "Y"
-			(at 223.52 83.82 0)
+			(at 161.29 72.39 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1277,7 +1288,7 @@
 			)
 		)
 		(property "JLCPCB Cost" "0.0108"
-			(at 223.52 83.82 0)
+			(at 161.29 72.39 0)
 			(effects
 				(font
 					(size 1.27 1.27)
