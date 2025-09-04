@@ -244,7 +244,7 @@ Set this true using the flag in the config.h file:
 
 This uses the CRC routines from Rob Tillaart, available here: https://github.com/RobTillaart/CRC
 
-A 'crc8' is perfromed on the data and a 2 byte CRC code is added to all replys (and expected on all enquiries). This is added between a ? and # symbol.
+A 'CRC-8/SMBUS' is perfromed on the data and a 2 byte CRC code is added to all replys (and expected on all enquiries). This is added between a ? and # symbol.
 
 If no CRC then the end char is a #.
 
