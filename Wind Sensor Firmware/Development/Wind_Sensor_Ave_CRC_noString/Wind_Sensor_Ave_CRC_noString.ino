@@ -1,14 +1,12 @@
 /*
-   RS485 Interface firmware for ATMega328
+   Wind Sensor Averaging firmware for ATMega328
    by:    Matt Little
-   date:  23/12/2025
+   date:  27/10/2021
    w:     www.curiouselectric.co.uk
    e:     hello@curiouselectric.co.uk
 
-   This code is for an ATMega328 base RS485 converter board.
-   The board is designed to read RS485 sensor devices, store and average the data and then return the data based on simple serial commands.
-
-   This uses an ATMega328 running at 8MHz (use this for 3.3V supply) or 16MHz (for 5V supply).
+   This code is for an ATMega328 unit solar sensor unit.
+   This uses an ATMega328 running at 8MHz with 3.3v or 5V supply.
 
    It returns the average values when requested on serial port.
    Or it broadcasts wind speed and direction data at set intervals.
@@ -17,26 +15,30 @@
    At all other times then the unit is asleep.
 
    More construction details are here:
-   https://github.com/curiouselectric/RS485InterfaceBoard
+   https://github.com/curiouselectric/WindSensor
 
    Details on this construction are here:
+   https://www.re-innovation.co.uk/docs/anemometer-monitor-for-wind-measurements/
 
    Please see the github rpository readme for all the serial commands available.
 
-    The ATMega382p IC can have Arduino Uno or MiniCore as the bootloader. MiniCore is slightly more efficient and allows the use of 8Mhz oscillator for 3.3V operation.
-    Uno bootloader is always 16MHz.
-
-   To program it with MiniCore bootloader:
+   To program it then MiniCore is used:
    // For optiboot using 3.3V and 8MHz and with WDT we need to sort out new code:
    Easiest method is:
    Install MiniCore from here: https://github.com/MCUdude/MiniCore
    Add to preferences and then board manager.
+
    Use minicore to burn the bootloader with an Arduino as an ISP using the 'Burn Bootloader' option
 
-    To program with Uno bootloader:
+  Optiboot can also be used as the bootlloader:
+  Need to download optiboot5a from here:
+  https://code.google.com/archive/p/optiboot/downloads
+  Install optiboot_atmega328.hex into a folder called "optiboot5a" in the hardware section
+  Use this optiboot hex file for upload to the ATmega328
+  Fuses are: Low = 0xFF, High = 0xDE, Extended = 0xFE
 
-    Based on:
-    http://www.arduino.cc/en/Tutorial/SerialEvent
+  Based on:
+  http://www.arduino.cc/en/Tutorial/SerialEvent
 
 */
 
@@ -128,9 +130,15 @@ pulse_counter_ pulse_counter;
 wind_vane_array wind_vane_data;
 
 // *********** These are global variables ***************************
-String inputString = "";      // a String to hold incoming data
-String errorString = "";      // a String to hold incoming data
-String returnString = "";     // A string to hold the returned data
+String inputString = "";   // a String to hold incoming data
+String errorString = "";   // a String to hold incoming data
+String returnString = "";  // A string to hold the returned data
+
+char inputStringC[25];    // A char array to hold incomming serial data
+char errorStringC[15];    // A char array to hold error info
+char returnStringC[100];  // A char array to hold returned serial data
+char buffC[10];           // A char array to hold converted values
+
 bool stringComplete = false;  // Checks if the string is complete
 byte UNIT_ID = B00000000;     // This is the unit_id of the board itself. This will be default value. Values from 0-255 can potentially be used. 4 bit binary number? = 16 channels.
 
@@ -204,13 +212,13 @@ void t1SCallback() {
     // Here we decide if we are shound the data to the serial port or not. Just for debugging:
     if (DEBUG_DATA_1S == true) {
       Serial.print(F("1s: "));
-      Serial.print((String)wind_speed_data.data_1s);  // Print the 1 second data for the wind speed
+      Serial.print(wind_speed_data.data_1s);  // Print the 1 second data for the wind speed
       Serial.print(F("\t :"));
-      Serial.print((String)wind_speed_data.data_min);  // Print the 1 second data
+      Serial.print(wind_speed_data.data_min);  // Print the 1 second data
       Serial.print(F("\t :"));
-      Serial.print((String)wind_speed_data.data_max);  // Print the 1 second data
+      Serial.print(wind_speed_data.data_max);  // Print the 1 second data
       Serial.print(F("\t :"));
-      Serial.print((String)wind_vane_data.data_1s);  // Print the instantaneous value of the wind vane
+      Serial.print(wind_vane_data.data_1s);  // Print the instantaneous value of the wind vane
       Serial.print(F("\t :"));
       Serial.print(wind_vane_data.return_direction(analogRead(VANE_PIN)));  // Print the instantaneous value of the wind vane as a direction
 
@@ -262,7 +270,7 @@ void t10SCallback() {
 
     if (DEBUG_DATA_10S == true) {
       Serial.print(F("10s: "));
-      Serial.print((String)wind_speed_data.data_10s);  // Print the 1 second data
+      Serial.print(wind_speed_data.data_10s, 2);  // Print the 1 second data, with 2dp
       Serial.print(F("\t : \t"));
       Serial.print(F(" N: "));
       Serial.println(data_counter_10s);
@@ -289,7 +297,7 @@ void t60SCallback() {
 
     if (DEBUG_DATA_60S == true) {
       Serial.print(F("60s: "));
-      Serial.print((String)wind_speed_data.data_60s);  // Print the 1 second data
+      Serial.print(wind_speed_data.data_60s, 2);  // Print the 1 second data
       Serial.print(F("\t : \t"));
       Serial.print(F(" N: "));
       Serial.println(data_counter_60s);
@@ -316,7 +324,7 @@ void t600SCallback() {
 
     if (DEBUG_DATA_600S == true) {
       Serial.print(F("600s: "));
-      Serial.print((String)wind_speed_data.data_600s);  // Print the 1 second data
+      Serial.print(wind_speed_data.data_600s, 2);  // Print the 1 second data
       Serial.print(F("\t : \t"));
       Serial.print(F(" N: "));
       Serial.println(data_counter_600s);
@@ -342,7 +350,7 @@ void t3600SCallback() {
 
     if (DEBUG_DATA_3600S == true) {
       Serial.print(F("3600s: "));
-      Serial.print((String)wind_speed_data.data_3600s);  // Print the 1 second data
+      Serial.print(wind_speed_data.data_3600s, 2);  // Print the 1 second data
       Serial.print(F("\t : \t"));
       Serial.print(F(" N: "));
       Serial.println(data_counter_3600s);
@@ -358,9 +366,9 @@ void t3600SCallback() {
 
 //ISR Functions for pulse counting
 void ISR_PULSE_0() {
-  if (millis() > debounce_time + DEBOUNCE_DELAY) {
+  if (micros() > debounce_time + DEBOUNCE_DELAY) {
     pulse_counter.pulse_counter_1++;  // Increment the counter
-    debounce_time = millis();
+    debounce_time = micros();
   }
 }
 
@@ -379,17 +387,19 @@ void tap(Button2& btn) {
 
       // ****** Start of button press for datalogger
       // Need to give command saying button has been pressed (and which direction now in)
-      returnString = "aaI";
-      returnString += (String)UNIT_ID;
-      returnString += "WVOK=";
-      returnString += wind_vane_data.vane_directions[vane_training_direction];  // Print the instantaneous value of the wind vane as a direction
+      strcpy(returnStringC, "aaI");
+      dtostrf((int)UNIT_ID, 1, 0, buffC);  //1 is mininum width, 1 is precision
+      strcat(returnStringC, buffC);
+      strcat(returnStringC, "WVOK=");
+      strcat(returnStringC, wind_vane_data.vane_directionsC[vane_training_direction]);
       if (ADD_CRC_CHECK) {
         // Add the CRC here: This adds the ? the CRC and the # to the end
-        returnString = add_CRC(returnString);
+        //returnString = add_CRC(returnString);                                         ************************************************************SORT OUT
+        strcat(returnStringC, "?CR#");
       } else {
-        returnString += "#";
+        strcat(returnStringC, "#");
       }
-      Serial.println(returnString);
+      Serial.println(returnStringC);
       // ****** End of button press for datalogger
 
       if (vane_training_direction >= 8) {
@@ -455,7 +465,7 @@ void flashLED() {
 void setup() {
 
   // Read the serial baud rate set in EEPROM
-  SERIAL_BAUD = EEPROM.read(EEPROM_SERIAL_BAUD);
+  SERIAL_BAUD = EEPROM.read(4);
   if (SERIAL_BAUD >= MAX_BAUD_RATES) {
     SERIAL_BAUD = 2;  // Initialise to 9600 if data out of range
   }
@@ -467,21 +477,13 @@ void setup() {
   errorString.reserve(15);
   returnString.reserve(100);
 
-  // Get the m and c wind speed conversion data - if it is NAN then set to simple values (for forst EEPROM save)
-  EEPROM.get(EEPROM_WIND_CON_M, wind_speed_data.wind_speed_conv_m);
-  if (isnan(wind_speed_data.wind_speed_conv_m)) {
-    wind_speed_data.wind_speed_conv_m = 1.0;
-    EEPROM.put(EEPROM_WIND_CON_M, wind_speed_data.wind_speed_conv_m);
-  }
-  EEPROM.get(EEPROM_WIND_CON_C, wind_speed_data.wind_speed_conv_c);
-  if (isnan(wind_speed_data.wind_speed_conv_c)) {
-    wind_speed_data.wind_speed_conv_c = 0.0;
-    EEPROM.put(EEPROM_WIND_CON_C, wind_speed_data.wind_speed_conv_c);
-  }
+  // Get the m and c wind speed conversion data
+  EEPROM.get(100, wind_speed_data.wind_speed_conv_m);
+  EEPROM.get(110, wind_speed_data.wind_speed_conv_c);
 
   // Get the control int for sending data to serial port
   // This is for constant output data
-  wind_speed_data.send_wind_speed_data = EEPROM.read(EEPROM_SEND_DATA);
+  wind_speed_data.send_wind_speed_data = EEPROM.read(120);
 
   // Read in the digital pins to check the Unit ID
   // This reads in three digital pins to set the Unit ID
@@ -582,16 +584,30 @@ void loop() {
     } else {
       if (checkData.baud_return_flag == true) {
         // Here we return the baud rate
-        returnString = "aaI";
-        returnString += (String)UNIT_ID;
-        returnString += "BD";
-        returnString += baud_rates[SERIAL_BAUD];
+        // ****** Start of button press for datalogger
+        // Need to give command saying button has been pressed (and which direction now in)
+        strcpy(returnStringC, "aaI");
+        dtostrf((int)UNIT_ID, 1, 0, buffC);  //1 is mininum width, 1 is precision
+        strcat(returnStringC, buffC);
+        strcat(returnStringC, "BD");
+        strcat(returnStringC, baud_rates[SERIAL_BAUD]);
+        if (ADD_CRC_CHECK) {
+          // Add the CRC here: This adds the ? the CRC and the # to the end
+          //returnString = add_CRC(returnString);                                         ************************************************************SORT OUT
+          strcat(returnStringC, "?CR#");
+        } else {
+          strcat(returnStringC, "#");
+        }
+        Serial.println(returnStringC);                                                     ************************************************************SORT OUT
+
         checkData.baud_return_flag = false;
         checkData.data_sent_flag = false;
       } else if (checkData.vane_data_flag == true) {
-        returnString = "aaI";
-        returnString += (String)UNIT_ID;
-        returnString += "WV=";
+        strcpy(returnStringC, "aaI");
+        dtostrf((int)UNIT_ID, 1, 0, buffC);  //1 is mininum width, 1 is precision
+        strcat(returnStringC, buffC);
+        strcat(returnStringC, "WV=");
+                                                                                          ************************************************************SORT OUT
         returnString += wind_vane_data.return_direction(analogRead(VANE_PIN));  // Print the instantaneous value of the wind vane as a direction
 
         for (int y = 0; y < 8; y++) {
@@ -601,11 +617,13 @@ void loop() {
         checkData.vane_data_flag = false;
         checkData.data_sent_flag = false;
       } else if (checkData.conversion_return_flag == true) {
+
         // Return conversion settings "aaI0STWSCONm123.4c567.89#"
         returnString = "aaI";
         returnString += (String)UNIT_ID;
         returnString += "WVCONm";
-        returnString += (String)wind_speed_data.wind_speed_conv_m;
+        dtostrf(wind_speed_data.wind_speed_conv_m, 1, 4, buffC);  //4 is mininum width, 6 is precision
+        returnString += buffC;
         returnString += "c";
         returnString += (String)wind_speed_data.wind_speed_conv_c;
         checkData.conversion_return_flag = false;
@@ -615,8 +633,8 @@ void loop() {
         wind_speed_data.wind_speed_conv_m = checkData.wind_speed_conv_m;
         wind_speed_data.wind_speed_conv_c = checkData.wind_speed_conv_c;
         // Store this data to EEPROM
-        EEPROM.put(EEPROM_WIND_CON_M, wind_speed_data.wind_speed_conv_m);
-        EEPROM.put(EEPROM_WIND_CON_C, wind_speed_data.wind_speed_conv_c);
+        EEPROM.put(100, wind_speed_data.wind_speed_conv_m);
+        EEPROM.put(110, wind_speed_data.wind_speed_conv_c);
         returnString = "aaI";
         returnString += (String)UNIT_ID;
         returnString += "WVSETm";
@@ -632,7 +650,7 @@ void loop() {
         returnString += (String)UNIT_ID;
         returnString += "STBD";
         // Read the serial baud rate set in EEPROM
-        SERIAL_BAUD = EEPROM.read(EEPROM_SERIAL_BAUD);
+        SERIAL_BAUD = EEPROM.read(10);
         if (SERIAL_BAUD >= MAX_BAUD_RATES) {
           SERIAL_BAUD = 2;  // Initialise to 9600 if data out of range
         }

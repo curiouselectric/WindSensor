@@ -6,7 +6,7 @@
 #define LED0_PIN          7 
 #define SWA_PIN           8
 
-#define HC12_PWR_PIN      4     // This is a power output for the HC12 unit - set to LED0 at present
+#define HC12_PWR_PIN      7     // This is a power output for the HC12 unit - set to LED0 at present
 
 #define FREQ_PIN          2
 #define VANE_PIN          A3
@@ -19,27 +19,20 @@
 //// The baud rate for serial communications
 #define MAX_BAUD_RATES    5
 
-#define ADD_CRC_CHECK     false    // Use this to add CRC check to incomming and outgoing messages
+#define ADD_CRC_CHECK     true    // Use this to add CRC check to incomming and outgoing messages
 
-#define DEBUG_FLAG        true   // Use this for debugging. Not need for roll out.
+#define DEBUG_FLAG        false   // Use this for debugging. Not need for roll out.
 #define DEBUG_DATA_1S     false   // Use this for debugging. Not need for roll out.
 #define DEBUG_DATA_10S    false   // Use this for debugging. Not need for roll out.
 #define DEBUG_DATA_60S    false   // Use this for debugging. Not need for roll out.
 #define DEBUG_DATA_600S   false   // Use this for debugging. Not need for roll out.
 #define DEBUG_DATA_3600S  false   // Use this for debugging. Not need for roll out.
                                     
-#define DEBOUNCE_DELAY    5       // debounce delay time in milli-Seconds This also gives max pulses - 5mS = 200 pulses per second                                   
+#define DEBOUNCE_DELAY    500       // debounce delay time in micro-Seconds This also gives max pulses - 500uS = 2000 pulses per second                                   
                             
 // These three digital pins are for the Device ID selection:
-#define  GPIO_ID0      A2  //  A0 Digital 4 on Arduino
+#define  GPIO_ID0      A0  //  A0 Digital 4 on Arduino
 #define  GPIO_ID1      A1  //  A1 Digital 5 on Arduino
-#define  GPIO_ID2      A0  //  A3 Digital 6 on Arduino
+#define  GPIO_ID2      A2  //  A3 Digital 6 on Arduino
 
 // I2C ADC is on standard I2C Pins: A4 (SDA) and A5 (SCL)
-
-
-// EEPROM information
-#define EEPROM_SERIAL_BAUD  4     // EEPROM location of this value
-#define EEPROM_WIND_CON_M  100    // EEPROM location of this value
-#define EEPROM_WIND_CON_C  110    // EEPROM location of this value
-#define EEPROM_SEND_DATA   120    // EEPROM location of this value

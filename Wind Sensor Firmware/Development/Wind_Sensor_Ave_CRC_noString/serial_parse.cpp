@@ -55,7 +55,7 @@ String check_data::parseData(String _inputString, byte _UNIT_ID, data_channel _l
             {
               // if we ask for "aaI0STBD?#" then it will return the baud rate, with ? being a number to set baud rate from array
               int baud_id = (_inputString.substring(8, 9)).toInt();
-              EEPROM.write(EEPROM_SERIAL_BAUD, baud_id);
+              EEPROM.write(4, baud_id);
               baud_set_flag = true;
             }
             else if (_inputString.charAt(4) == 'S' && _inputString.charAt(5) == 'E' && _inputString.charAt(6) == 'N' && _inputString.charAt(7) == 'D')
@@ -64,7 +64,7 @@ String check_data::parseData(String _inputString, byte _UNIT_ID, data_channel _l
               int send_id = (_inputString.substring(8, 9)).toInt();
               if (send_id >= 0 && send_id < 6)
               {
-                EEPROM.write(EEPROM_SEND_DATA, send_id);
+                EEPROM.write(120, send_id);
                 send_wind_data_flag = true;
               }
             }

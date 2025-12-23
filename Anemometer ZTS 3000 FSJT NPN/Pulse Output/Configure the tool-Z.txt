@@ -1,0 +1,4 @@
+Open this link to download the tools
+
+Configure the tool to change the device address and baud rate:
+https://drive.google.com/drive/folders/1fGTx7r_NDlRJPfm_LQPcdCKhRhXtE8Gl?usp=sharing
