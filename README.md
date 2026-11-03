@@ -72,7 +72,7 @@ Anemometer Name      | Link   | Type   | m Value   | c Value
 ---------------------|----------|---------|----------|----------
 Vector Insrutments NRG #40C | https://www.nrgsystems.com/products/met-sensors/detail/40c-anemometer | Hall-effect  | 0.765 for m/s | 0.35 for m/s
 Maplin Anemometer (low cost) | https://www.ebay.co.uk/itm/274338314354 | Reed-switch pulse | 0.7 for m/s | 0 for m/s
-AliExpress Unit (low cost) PR-3000-FS-NPN| https://www.aliexpress.com/item/32798148991.html | NPN Pulse | |
+AliExpress Unit (low cost) PR-3000-FS-NPN| https://www.aliexpress.com/item/32798148991.html | NPN Pulse | 0.0875 for m/s | 0 for m/s
 Pro-D Anemometer/Vane combination| https://cdn.shopify.com/s/files/1/0115/9192/files/Pro-D_Anemometer_Specs_v2.docx.pdf | Magnetic pulse | 1.006 for m/s | 0 for m/s
 
 ## Wind Vanes Tested:
