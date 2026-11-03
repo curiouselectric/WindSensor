@@ -70,16 +70,18 @@ Both inputs for the wind vane and anemometer are buffered with an op-amp and als
 
 Anemometer Name      | Link   | Type   | m Value   | c Value
 ---------------------|----------|---------|----------|----------
-Vector Insrutments NRG #40C | https://www.nrgsystems.com/products/met-sensors/detail/40c-anemometer | Hall-effect  | 0.765 for m/s | 0.35 for m/s
-Maplin Anemometer (low cost) | https://www.ebay.co.uk/itm/274338314354 | Reed-switch pulse | 0.7 for m/s | 0 for m/s
-AliExpress Unit (low cost) PR-3000-FS-NPN| https://www.aliexpress.com/item/32798148991.html | NPN Pulse | 0.0875 for m/s | 0 for m/s
-Pro-D Anemometer/Vane combination| https://cdn.shopify.com/s/files/1/0115/9192/files/Pro-D_Anemometer_Specs_v2.docx.pdf | Magnetic pulse | 1.006 for m/s | 0 for m/s
+Vector Insrutments NRG #40C | [https://www.nrgsystems.com/products/met-sensors/detail/40c-anemometer](https://www.nrgsystems.com/products/met-sensors/detail/40c-anemometer) | Hall-effect  | 0.765 for m/s | 0.35 for m/s
+Maplin Anemometer (low cost) | [https://www.ebay.co.uk/itm/274338314354](https://www.ebay.co.uk/itm/274338314354) | Reed-switch pulse | 0.7 for m/s | 0 for m/s
+Curios Electric PR-3000-FS-NPN| [https://www.curiouselectric.co.uk/collections/featured/products/anemometer-for-wind-speed-measurements](https://www.curiouselectric.co.uk/collections/featured/products/anemometer-for-wind-speed-measurements) | NPN Pulse | 0.0875 for m/s | 0 for m/s
+Pro-D Anemometer/Vane combination| [https://cdn.shopify.com/s/files/1/0115/9192/files/Pro-D_Anemometer_Specs_v2.docx.pdf](https://cdn.shopify.com/s/files/1/0115/9192/files/Pro-D_Anemometer_Specs_v2.docx.pdf) | Magnetic pulse | 1.006 for m/s | 0 for m/s
 
 ## Wind Vanes Tested:
 
 Wind Vane Name      |   Link   |  Type
 ---------------------|----------|-----------
 Maplin Vane | No Link |  Switched resistive
+Pro-D Anemometer/Vane combination| [https://cdn.shopify.com/s/files/1/0115/9192/files/Pro-D_Anemometer_Specs_v2.docx.pdf](https://cdn.shopify.com/s/files/1/0115/9192/files/Pro-D_Anemometer_Specs_v2.docx.pdf) | 20k resistive
+Curios Electric ZTS-3000-TR-FSJT-NPN | [https://www.curiouselectric.co.uk/collections/featured/products/wind-vane-for-wind-direction-measurements](https://www.curiouselectric.co.uk/collections/featured/products/wind-vane-for-wind-direction-measurements) | 0-3.3V output
 
 ## Board ID Number
 
