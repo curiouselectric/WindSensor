@@ -44,12 +44,12 @@ class WindSensorApp:
         self.text_box.on_submit(self.change_device_id)  
 
         # 2. Reset Button layout placement
-        self.ax_btn = self.fig.add_axes([0.45, 0.03, 0.12, 0.04])
-        self.reset_btn = Button(self.ax_btn, 'Reset Compass', color='#f0f0f0', hovercolor='#ffcccc')
+        self.ax_btn = self.fig.add_axes([0.65, 0.03, 0.10, 0.04])
+        self.reset_btn = Button(self.ax_btn, 'Reset Wind Rose', color='#f0f0f0', hovercolor='#ffcccc')
         self.reset_btn.on_clicked(self.click_reset_btn)  
 
         # CORE FEATURE: 3. Quit Button layout placement
-        self.ax_quit_btn = self.fig.add_axes([0.65, 0.03, 0.10, 0.04])
+        self.ax_quit_btn = self.fig.add_axes([0.45, 0.03, 0.12, 0.04])
         self.quit_btn = Button(self.ax_quit_btn, 'Quit App', color='#f0f0f0', hovercolor='#ff4d4d')
         self.quit_btn.on_clicked(self.click_quit_btn)  # Wire up the quit click handler
 
