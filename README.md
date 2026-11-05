@@ -31,11 +31,11 @@ The resistance then tells us the direction. A pull up reistor is required in the
 
 The wind vane input can be 'trained'. So put the unit into vane training mode via the serial interface. This will run through N, NE, E, SE, S, SW, W, NW and you can hold the unit in the correct direction position and press the switch to store that data to memory. Once trained then the unit creates a buffer zone around each of the values and within the zone then the unit will record the correct direction.
 
-Wind direction is difficult to measure, as you cannot directly average the analog value (because of the 360 to 0 point where the analog value rolls around from 1024 back to 0 - this means an average of a unit pointing just off north (i.e. one reading of 0 and one reading of 360) will give an average of (360+0)/2 = 180, which is south and totally wrong!). 
+Wind direction is slightly difficult to measure, as you cannot directly average the analog value (because of the potential rollover point from 360 degrees to 0 degrees point where the analog pin value rolls around from 1024 back to 0 - this means an average of a unit pointing just off north (i.e. one reading of 0 and one reading of 360) will give an average of (360+0)/2 = 180, which is south and totally wrong!). The code here creates 'bands', along with a 'rollover' band so that (for example) 900 to 1024 and 0 to 36 will be linked to North, so that the roll over point is handled as best as possible.
 
-This unit will record the number of seconds the vane has been pointing in a certain direction. This means a 'wind rose' can easily be created. This is stored and updated until it is directly reset. The unit will also return the instantaeous direction, if that is needed.
+This unit will record the number of seconds the vane has been pointing in a certain direction. This means a 'wind rose' can relatively easily be created. This is stored and updated until it is directly reset. The unit will also return the instantaneous direction, if that is needed.
 
-Note: there is a 3V3 zener diode on the input to the Wind Vane unit. If you power the device with 3.3V then this is no problem. If you power the device with 5V then you will need to ensure the voltage at VANE does not go above 3.3V or else it will be limited.
+** Note: there is a 3V3 zener diode on the input to the Wind Vane unit. If you power the device with 3.3V then this is no problem. If you power the device with 5V then you will need to ensure the voltage at VANE does not go above 3.3V or else it will be limited. **
 
 
 There are two mode of operation, depending upon your use case:
