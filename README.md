@@ -35,10 +35,7 @@ Wind direction is slightly difficult to measure, as you cannot directly average 
 
 This unit will record the number of seconds the vane has been pointing in a certain direction. This means a 'wind rose' can relatively easily be created. This is stored and updated until it is directly reset. The unit will also return the instantaneous direction, if that is needed.
 
-** Note: there is a 3V3 zener diode on the input to the Wind Vane unit. If you power the device with 3.3V then this is no problem. If you power the device with 5V then you will need to ensure the voltage at VANE does not go above 3.3V or else it will be limited. **
-
-
-There are two mode of operation, depending upon your use case:
+There are two mode of operation, depending upon your use case (please see the firmware for more detailled information about the available serial commands):
 
 ## Response Mode
 
@@ -57,7 +54,7 @@ Boradcast mode works well if the logger is always listening and you only have on
 
 The two modes work together - you can have the unit sending regular data and also responding to requests.
 
-It runs on an ATMega328 running at 8MHz with selectable baud serial (up to 57600). It comes pre-programmed, but code can be uploaded via the Arduino IDE, using the MiniCore board add-on. See firmware for more details.
+It runs on an ATMega328 running at 8MHz (external crystal) with selectable baud serial (up to 57600). It comes pre-programmed, but code can be uploaded via the Arduino IDE, using the MiniCore board add-on. See firmware for more details.
 
 # Hardware
 
